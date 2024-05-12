@@ -5,8 +5,30 @@ import java.awt.event.*;
 import java.awt.geom.*;
 
 public class Main extends JFrame implements ActionListener, MouseListener {
+
+    private JPanel window = new JPanel();
+    private Canvas canvas = new Canvas();
+    private String title = "Kite Life";
+    final private int WINDOW_WIDTH = 500;
+    final private int WINDOW_HEIGHT = 500;
     public static void main(String[] args) {
-        
+        new Main();
+    } // makes a new Main object
+
+    public Main() {
+        setTitle(title);
+        getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        getContentPane().setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        window.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        window.add(canvas);
+
+        addMouseListener(this);
+
+        this.pack(); // do I need "this."?
+        this.toFront();
+        this.setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -18,13 +40,6 @@ public class Main extends JFrame implements ActionListener, MouseListener {
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseClicked(MouseEvent e) {
-        int mouseX = e.getX();
-        int mouseY = e.getY();
-        System.out.println("click at "+mouseX+", "+mouseY);
-        JDialog box = new JDialog(this);
-        box.setBounds(400,400,170,20);
-        box.toFront();
-        box.setVisible(true);
-        box.setTitle("something witty");
+        System.out.println("click");
     }
 }
