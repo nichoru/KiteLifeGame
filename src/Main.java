@@ -9,20 +9,25 @@ public class Main extends JFrame implements ActionListener, MouseListener {
     private JPanel window = new JPanel();
     private Canvas canvas = new Canvas();
     private String title = "Kite Life";
-    final private int WINDOW_WIDTH = 500;
-    final private int WINDOW_HEIGHT = 500;
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private int windowWidth = screenSize.width/2;
+    private int windowHeight = screenSize.height/2;
     public static void main(String[] args) {
         new Main();
     } // makes a new Main object
 
     public Main() {
         setTitle(title);
-        getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        if(windowWidth < windowHeight) windowHeight = windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
+        else windowWidth = windowHeight;
+        getContentPane().setPreferredSize(new Dimension(windowWidth, windowHeight));
         getContentPane().setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        window.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        window.setPreferredSize(new Dimension(windowWidth, windowHeight));
         window.add(canvas);
+
+        setLocation((screenSize.width-windowWidth)/2, (screenSize.height-windowHeight)/2); // centres the window on the user's screen
 
         addMouseListener(this);
 
