@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.Scanner;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.awt.image.BufferedImage; // reduces flickering by buffering the image
 
 public class Main extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
 
@@ -14,8 +15,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private int windowHeight = screenSize.height/2;
     private int mouseX;
     private int mouseY;
+    private BufferedImage offScreenImage;
+    private int xOffset = 8;
+    private int yOffset = 31;
+    private Kite player;
 
-    Kite player = new Kite(windowWidth, (screenSize.width-windowWidth)/2, (screenSize.height-windowHeight)/2);
     public static void main(String[] args) {
         new Main();
     } // makes a new Main object
@@ -39,6 +43,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.pack();
         this.toFront();
         this.setVisible(true);
+
+        player = new Kite(windowWidth);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -50,9 +56,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX();
-        mouseY = e.getY();
-        System.out.println("move to "+mouseX+", "+mouseY);
+        mouseX = e.getX() - xOffset;
+        mouseY = e.getY() - yOffset;
         repaint();
     }
     public void mouseDragged(MouseEvent e) {System.out.println("drag");}
@@ -63,8 +68,14 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2 = (Graphics2D) g;
+        if(offScreenImage == null) offScreenImage = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = (Graphics2D) offScreenImage.getGraphics();
+
+        g2.setColor(getBackground());
+        g2.fillRect(0, 0, windowWidth, windowHeight);
 
         player.show(g2, mouseX, mouseY);
+
+        g.drawImage(offScreenImage, xOffset, yOffset, null);
     }
 }

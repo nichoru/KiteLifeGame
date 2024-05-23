@@ -11,8 +11,8 @@ public class Kite {
     private int height;
     private int lives;
 
-    public Kite(int scale, int x1, int y1) {
-        this.width = scale/96;
+    public Kite(int scale) {
+        this.width = scale/20;
         this.height = this.width*5/3;
         this.lives = 4;
         this.x = 50;
@@ -22,6 +22,7 @@ public class Kite {
     public void show(Graphics2D g2, int mouseX, int mouseY) {
         this.x = mouseX;
         this.y = mouseY;
+        g2.setColor(Color.BLACK);
         if(this.lives == 4) g2.drawPolygon(new int[]{this.x + this.width, this.x, this.x}, new int[]{this.y, this.y - this.height, this.y}, 3);
         if(this.lives >= 3) g2.drawPolygon(new int[]{this.x - this.width, this.x, this.x}, new int[]{this.y, this.y - this.height, this.y}, 3);
         if(this.lives >= 2) g2.drawPolygon(new int[]{this.x, this.x + this.width, this.x}, new int[]{this.y + this.height, this.y, this.y}, 3);
