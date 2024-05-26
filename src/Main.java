@@ -44,7 +44,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(windowWidth);
+        player = new Kite(windowWidth, Color.YELLOW);
     }
 
     public void actionPerformed(ActionEvent e) {
