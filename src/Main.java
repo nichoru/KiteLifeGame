@@ -46,7 +46,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.setVisible(true);
 
         player = new Kite(windowWidth, Color.YELLOW);
-        cloud1 = new Cloud(windowWidth/2, windowWidth);
+        cloud1 = new Cloud(windowWidth, windowHeight);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -78,7 +78,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         MyGraphics mg = new MyGraphics(g2);
         if(player != null) player.show(mg, mouseX, mouseY);
-        if(cloud1 != null) cloud1.show(g2);
+        if(cloud1 != null) cloud1.show(mg);
 
         g.drawImage(offScreenImage, xOffset, yOffset, null);
     }
