@@ -19,6 +19,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private int xOffset = 8;
     private int yOffset = 31;
     private Kite player;
+    private Cloud cloud1;
 
     public static void main(String[] args) {
         new Main();
@@ -45,6 +46,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.setVisible(true);
 
         player = new Kite(windowWidth, Color.YELLOW);
+        cloud1 = new Cloud(windowWidth/2, windowWidth);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -74,7 +76,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         g2.setColor(getBackground());
         g2.fillRect(0, 0, windowWidth, windowHeight);
 
-        player.show(g2, mouseX, mouseY);
+        MyGraphics mg = new MyGraphics(g2);
+        if(player != null) player.show(mg, mouseX, mouseY);
+        if(cloud1 != null) cloud1.show(g2);
 
         g.drawImage(offScreenImage, xOffset, yOffset, null);
     }
