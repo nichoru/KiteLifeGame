@@ -13,7 +13,12 @@ public class Cloud {
     public Cloud(int scale, int yScale) {
         this.scale = scale;
         this.yScale = yScale;
-        this.generate();
+        this.regenerate();
+    }
+
+    public void move() {
+        this.y++;
+        if(this.y > this.yScale) this.regenerate();
     }
 
     public void show(MyGraphics g) {
@@ -23,9 +28,9 @@ public class Cloud {
         g.makeColoredCircle(this.x - 7*scale/96, this.y + 3*scale/144, scale/72, new Color(gray4, gray4, gray4), new Color(gray4, gray4, gray4));
     }
 
-    public void generate() {
+    public void regenerate() {
         this.x = (int) (Math.random()*scale);
-        this.y = (int) (-Math.random()*yScale);
+        this.y = (int) 50;
         this.gray1 = (int) (Math.random()*75 + 125);
         this.gray2 = (int) (Math.random()*75 + 125);
         this.gray3 = (int) (Math.random()*75 + 125);

@@ -18,8 +18,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private BufferedImage offScreenImage;
     private int xOffset = 8;
     private int yOffset = 31;
+    private int screenPixelSize = 100;
     private Kite player;
     private Cloud cloud1;
+    private Color[][] screen = new Color[screenPixelSize][screenPixelSize];
 
     public static void main(String[] args) {
         new Main();
@@ -47,6 +49,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         player = new Kite(windowWidth, Color.YELLOW);
         cloud1 = new Cloud(windowWidth, windowHeight);
+        for(int i = 0; i < windowWidth; i++) {
+            for(int j = 0; j < windowHeight; j++) {
+                screen[i][j] = Color.WHITE;
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -78,7 +85,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         MyGraphics mg = new MyGraphics(g2);
         if(player != null) player.show(mg, mouseX, mouseY);
-        if(cloud1 != null) cloud1.show(mg);
+        if(cloud1 != null) {
+            cloud1.move();
+            cloud1.show(mg);
+        }
 
         g.drawImage(offScreenImage, xOffset, yOffset, null);
     }
