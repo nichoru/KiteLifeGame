@@ -18,10 +18,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private BufferedImage offScreenImage;
     private int xOffset = 8;
     private int yOffset = 31;
-    private int screenPixelSize = 100;
+    private int screenPixelSize = 150;
     private Kite player;
     private Cloud cloud1;
-    private Color[][] screen = new Color[screenPixelSize][screenPixelSize];
+    private Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
 
     public static void main(String[] args) {
         new Main();
@@ -51,7 +51,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         cloud1 = new Cloud(windowWidth, windowHeight);
         for(int i = 0; i < windowWidth; i++) {
             for(int j = 0; j < windowHeight; j++) {
-                screen[i][j] = Color.WHITE;
+                screen[1][i][j] = Color.WHITE;
+                screen[2][i][j] = Color.WHITE;
             }
         }
     }
@@ -80,8 +81,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         if(offScreenImage == null) offScreenImage = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = (Graphics2D) offScreenImage.getGraphics();
 
-        g2.setColor(getBackground());
-        g2.fillRect(0, 0, windowWidth, windowHeight);
 
         MyGraphics mg = new MyGraphics(g2);
         if(player != null) player.show(mg, mouseX, mouseY);
@@ -90,6 +89,15 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             cloud1.show(mg);
         }
 
+        for(int i = 0; i < screenPixelSize; i++) {
+            for(int j = 0; j < screenPixelSize; j++) {
+                if(screen[1][i][j] != screen[2][i][j]) {
+                    g2.setColor(screen[2][i][j]);
+                    g2.fillRect(i * windowWidth / screenPixelSize, j * windowHeight / screenPixelSize, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
+                    screen[1][i][j] = screen[2][i][j];
+                }
+            }
+        }
         g.drawImage(offScreenImage, xOffset, yOffset, null);
     }
 }
