@@ -18,10 +18,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private BufferedImage offScreenImage;
     private int xOffset = 8;
     private int yOffset = 31;
-    private int screenPixelSize = 150;
+    private static int screenPixelSize = 150;
     private Kite player;
     private Cloud cloud1;
-    private Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
+    public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
 
     public static void main(String[] args) {
         new Main();
@@ -49,10 +49,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         player = new Kite(windowWidth, Color.YELLOW);
         cloud1 = new Cloud(windowWidth, windowHeight);
-        for(int i = 0; i < windowWidth; i++) {
-            for(int j = 0; j < windowHeight; j++) {
+        for(int i = 0; i < screenPixelSize; i++) {
+            for(int j = 0; j < screenPixelSize; j++) {
+                screen[0][i][j] = Color.BLACK;
                 screen[1][i][j] = Color.WHITE;
-                screen[2][i][j] = Color.WHITE;
             }
         }
     }
@@ -82,7 +82,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         Graphics2D g2 = (Graphics2D) offScreenImage.getGraphics();
 
 
-        MyGraphics mg = new MyGraphics(g2);
+        MyGraphics mg = new MyGraphics((float) windowWidth/(float) screenPixelSize);
         if(player != null) player.show(mg, mouseX, mouseY);
         if(cloud1 != null) {
             cloud1.move();
@@ -91,10 +91,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
-                if(screen[1][i][j] != screen[2][i][j]) {
-                    g2.setColor(screen[2][i][j]);
+                if(screen[0][i][j] != screen[1][i][j]) {
+                    g2.setColor(screen[1][i][j]);
                     g2.fillRect(i * windowWidth / screenPixelSize, j * windowHeight / screenPixelSize, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
-                    screen[1][i][j] = screen[2][i][j];
+                    screen[0][i][j] = screen[1][i][j];
                 }
             }
         }
