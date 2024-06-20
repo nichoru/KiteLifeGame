@@ -25,7 +25,7 @@ public class Kite {
     public void show(MyGraphics g, int mouseX, int mouseY) {
         this.x = mouseX;
         this.y = mouseY;
-        if(this.lives == 4) g.makeRATriangle(this.x, this.y, this.width, this.height, fillColor, outlineColor);
+        if(this.lives == 4) g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, fillColor, outlineColor);
 //        if(this.lives >= 3) g.makeRATriangle(this.x - this.width, this.x, this.x, this.y, this.y - this.height, this.y);
 //        if(this.lives >= 2) g.makeRATriangle(this.x, this.x + this.width, this.x, this.y + this.height, this.y, this.y);
 //        g.makeRATriangle(this.x, this.x - this.width, this.x, this.y + this.height, this.y, this.y);

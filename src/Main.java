@@ -15,7 +15,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private int windowHeight = screenSize.height/2;
     private int mouseX;
     private int mouseY;
-    private BufferedImage offScreenImage;
     private int xOffset = 8;
     private int yOffset = 31;
     private static int screenPixelSize = 150;
@@ -47,12 +46,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(windowWidth, Color.YELLOW);
+        player = new Kite(screenPixelSize, Color.YELLOW);
         cloud1 = new Cloud(windowWidth, windowHeight);
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
                 screen[0][i][j] = Color.BLACK;
-                screen[1][i][j] = Color.WHITE;
             }
         }
     }
@@ -66,8 +64,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX() - xOffset;
-        mouseY = e.getY() - yOffset;
+        mouseX = (e.getX() - xOffset)*screenPixelSize/windowWidth;
+        mouseY = (e.getY() - yOffset)*screenPixelSize/windowWidth;
         repaint();
     }
     public void mouseDragged(MouseEvent e) {System.out.println("drag");}
@@ -78,11 +76,15 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if(offScreenImage == null) offScreenImage = new BufferedImage(windowWidth, windowHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = (Graphics2D) offScreenImage.getGraphics();
+        Graphics2D g2 = (Graphics2D) g;
 
+        MyGraphics mg = new MyGraphics((float) windowWidth/(float) screenPixelSize, g2);
 
-        MyGraphics mg = new MyGraphics((float) windowWidth/(float) screenPixelSize);
+        for(int i = 0; i < screenPixelSize; i++) {
+            for(int j = 0; j < screenPixelSize; j++) {
+                screen[1][i][j] = Color.WHITE;
+            }
+        }
         if(player != null) player.show(mg, mouseX, mouseY);
         if(cloud1 != null) {
             cloud1.move();
@@ -93,11 +95,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             for(int j = 0; j < screenPixelSize; j++) {
                 if(screen[0][i][j] != screen[1][i][j]) {
                     g2.setColor(screen[1][i][j]);
-                    g2.fillRect(i * windowWidth / screenPixelSize, j * windowHeight / screenPixelSize, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
+                    System.out.println(i);
+                    g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
                     screen[0][i][j] = screen[1][i][j];
                 }
             }
         }
-        g.drawImage(offScreenImage, xOffset, yOffset, null);
     }
 }
