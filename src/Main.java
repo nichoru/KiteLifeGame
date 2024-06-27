@@ -21,6 +21,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private Kite player;
     private Cloud cloud1;
     public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
+    private boolean isStart = true;
 
     public static void main(String[] args) {
         new Main();
@@ -75,7 +76,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
     @Override
     public void paint(Graphics g) {
-        super.paint(g);
+        if(isStart) {
+            super.paint(g);
+            System.out.println("yep");
+            isStart = false;
+        }
         Graphics2D g2 = (Graphics2D) g;
 
         MyGraphics mg = new MyGraphics((float) windowWidth/(float) screenPixelSize, g2);
@@ -95,7 +100,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             for(int j = 0; j < screenPixelSize; j++) {
                 if(screen[0][i][j] != screen[1][i][j]) {
                     g2.setColor(screen[1][i][j]);
-                    System.out.println(i);
                     g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
                     screen[0][i][j] = screen[1][i][j];
                 }
