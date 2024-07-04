@@ -12,6 +12,7 @@ public class Kite {
     private int lives;
     private Color outlineColor = Color.BLACK;
     private Color fillColor;
+    private int immunity = 0;
 
     public Kite(int scale, Color color) {
         this.width = scale/20;
@@ -23,11 +24,19 @@ public class Kite {
     }
 
     public void show(MyGraphics g, int mouseX, int mouseY) {
+        boolean collision = false;
         this.x = mouseX;
         this.y = mouseY;
-        if(this.lives == 4) g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, fillColor, outlineColor);
-        if(this.lives >= 3) g.makeRATriangle(this.x, this.y, this.width, this.height, -1, -1, fillColor, outlineColor);
-        if(this.lives >= 2) g.makeRATriangle(this.x, this.y, this.width, this.height, 1, 1, fillColor, outlineColor);
-        g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, fillColor, outlineColor);
+        if(this.lives == 4) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, fillColor, outlineColor, "player")) collision = true;
+        if(this.lives >= 3) if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, -1, fillColor, outlineColor, "player")) collision = true;
+        if(this.lives >= 2) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, 1, fillColor, outlineColor,  "player")) collision = true;
+        if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, fillColor, outlineColor, "player")) collision = true;
+        if(immunity > 0) immunity--;
+        else if(collision) loseLife();
+    }
+
+    private void loseLife() {
+        this.lives--;
+        this.immunity = 30;
     }
 }

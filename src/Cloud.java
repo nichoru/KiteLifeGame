@@ -21,10 +21,10 @@ public class Cloud {
     }
 
     public void show(MyGraphics g) {
-        g.makeColoredCircle(this.x - 11*scale/288, (int) this.y + scale/144, scale/36, new Color(gray1, gray1, gray1), new Color(gray1, gray1, gray1));
-        g.makeColoredCircle(this.x + 5*scale/144, (int) this.y + 3*scale/288, 7*scale/288, new Color(gray2, gray2, gray2), new Color(gray2, gray2, gray2));
-        g.makeColoredCircle(this.x, (int) this.y, 5*scale/144, new Color(gray3, gray3, gray3), new Color(gray3, gray3, gray3));
-        g.makeColoredCircle(this.x - 7*scale/96, (int) this.y + 3*scale/144, scale/72, new Color(gray4, gray4, gray4), new Color(gray4, gray4, gray4));
+        g.makeColoredCircle(this.x - 11*scale/288, (int) this.y + scale/144, scale/36, new Color(gray1, gray1, gray1), new Color(gray1, gray1, gray1), "obstacle");
+        g.makeColoredCircle(this.x + 5*scale/144, (int) this.y + 3*scale/288, 7*scale/288, new Color(gray2, gray2, gray2), new Color(gray2, gray2, gray2), "obstacle");
+        g.makeColoredCircle(this.x, (int) this.y, 5*scale/144, new Color(gray3, gray3, gray3), new Color(gray3, gray3, gray3), "obstacle");
+        g.makeColoredCircle(this.x - 7*scale/96, (int) this.y + 3*scale/144, scale/72, new Color(gray4, gray4, gray4), new Color(gray4, gray4, gray4), "obstacle");
     }
 
     public void regenerate() {

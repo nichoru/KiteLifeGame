@@ -23,6 +23,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private Cloud cloud2;
     private Cloud cloud3;
     public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
+    public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
     private boolean isStart = true;
 
     public static void main(String[] args) {
@@ -56,6 +57,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
                 screen[0][i][j] = Color.BLACK;
+                screenType[i][j] = "background";
             }
         }
     }
@@ -92,9 +94,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
                 screen[1][i][j] = Color.WHITE;
+                screenType[i][j] = "background";
             }
         }
-        if(player != null) player.show(mg, mouseX, mouseY);
+
         if(cloud1 != null) {
             cloud1.move();
             cloud1.show(mg);
@@ -103,6 +106,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             cloud3.move();
             cloud3.show(mg);
         }
+        if(player != null) player.show(mg, mouseX, mouseY);
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
