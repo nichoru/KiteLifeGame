@@ -20,10 +20,16 @@ public class MyGraphics {
 
 
     public void makeColoredCircle(int x, int y, int radius, Color f, Color o) {
-        g2.setColor(f);
-        g2.fillOval(x-radius, y-radius, radius*2, radius*2);
-        g2.setColor(o);
-        g2.drawOval(x-radius, y-radius, radius*2, radius*2);
+        for(int i=0; i < radius; i++) {
+            for(int j=0; j < radius; j++) {
+                if(i*i+j*j < radius*radius) {
+                    Main.screen[1][x+i][y+j] = f;
+                    Main.screen[1][x-i][y+j] = f;
+                    Main.screen[1][x+i][y-j] = f;
+                    Main.screen[1][x-i][y-j] = f;
+                }
+            }
+        }
     }
 
     public void makeRATriangle(int x, int y, int w, int h, int xD, int yD, Color fill, Color outline) {

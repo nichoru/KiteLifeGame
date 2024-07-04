@@ -48,7 +48,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.setVisible(true);
 
         player = new Kite(screenPixelSize, Color.YELLOW);
-        cloud1 = new Cloud(windowWidth, windowHeight);
+        cloud1 = new Cloud(screenPixelSize);
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
                 screen[0][i][j] = Color.BLACK;
