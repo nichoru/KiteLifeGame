@@ -20,6 +20,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private static int screenPixelSize = 150;
     private Kite player;
     private Cloud cloud1;
+    private Cloud cloud2;
+    private Cloud cloud3;
     public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
     private boolean isStart = true;
 
@@ -49,6 +51,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         player = new Kite(screenPixelSize, Color.YELLOW);
         cloud1 = new Cloud(screenPixelSize);
+        cloud2 = new Cloud(screenPixelSize);
+        cloud3 = new Cloud(screenPixelSize);
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
                 screen[0][i][j] = Color.BLACK;
@@ -94,6 +98,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         if(cloud1 != null) {
             cloud1.move();
             cloud1.show(mg);
+            cloud2.move();
+            cloud2.show(mg);
+            cloud3.move();
+            cloud3.show(mg);
         }
 
         for(int i = 0; i < screenPixelSize; i++) {
