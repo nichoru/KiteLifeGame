@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.Objects;
 
 public class MyGraphics {
     private Color fillColor = Color.WHITE;
@@ -47,11 +46,19 @@ public class MyGraphics {
 
     public boolean makeRATriangle(int x, int y, int w, int h, int xD, int yD, Color fill, Color outline, String type) {
         boolean collision = false;
-        for(int i=0; i < w; i++) if(colorIn(x+i*xD,y,fill, type)) collision = true;
-        for(int i=0; i < h; i++) if(colorIn(x,y+i*yD,fill, type)) collision = true;
+
         if(h<w) {
-            for (int i = 0; i < w; i++) if (colorIn(x + i * xD, y - yD * (h + i * h / w), fill, type)) collision = true;
-        } else for(int i=0; i < h; i++) if(colorIn(x+xD*(w-i*w/h),y+i*yD,fill, type)) collision = true;
+            for (int i = 0; i < w; i++) {
+                for(int j = 0; j < w-i; j++) if(colorIn(x+i*xD, y+yD*((j+1)*h/w), fill, type)) collision = true;
+                if(colorIn(x + i * xD, y - yD * (h + i * h / w), outline, type)) collision = true;
+            }
+        } else for(int i=0; i < h; i++) {
+            for(int j = 0; j < h-i; j++) if(colorIn(x+xD*((j+1)*w/h),y+i*yD,fill, type)) collision = true;
+            if(colorIn(x+xD*(w-i*w/h),y+i*yD,outline, type)) collision = true;
+        }
+
+        for(int i=0; i < w; i++) if(colorIn(x+i*xD,y,outline, type)) collision = true;
+        for(int i=0; i < h; i++) if(colorIn(x,y+i*yD,outline, type)) collision = true;
 
         return collision;
     }

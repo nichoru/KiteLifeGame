@@ -1,8 +1,4 @@
-import javax.swing.*;
 import java.awt.*;
-import java.util.Scanner;
-import java.awt.event.*; // listener
-import java.awt.geom.*;
 
 public class Kite {
     private int x;
@@ -21,6 +17,7 @@ public class Kite {
         this.x = 50;
         this.y = 50;
         this.fillColor = color;
+        this.immunity = 30;
     }
 
     public void show(MyGraphics g, int mouseX, int mouseY) {

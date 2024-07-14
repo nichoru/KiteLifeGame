@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Scanner;
 import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.BufferedImage; // reduces flickering by buffering the image
 
 public class Main extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
 
