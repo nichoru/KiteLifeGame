@@ -22,6 +22,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
     public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
     private boolean isStart = true;
+    private final int UPDATE_SPEED = 10; // milliseconds between screen updates
 
     public static void main(String[] args) {
         new Main();
@@ -57,6 +58,15 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 screenType[i][j] = "background";
             }
         }
+
+        while(player.isAlive()) {
+            try{
+                repaint();
+                Thread.sleep(UPDATE_SPEED);
+            } catch(InterruptedException e) {
+                System.out.println(e);
+            }
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -70,7 +80,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void mouseMoved(MouseEvent e) {
         mouseX = (e.getX() - xOffset)*screenPixelSize/windowWidth;
         mouseY = (e.getY() - yOffset)*screenPixelSize/windowWidth;
-        repaint();
     }
     public void mouseDragged(MouseEvent e) {System.out.println("drag");}
     public void mouseClicked(MouseEvent e) {

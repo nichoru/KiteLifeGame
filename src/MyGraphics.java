@@ -11,13 +11,6 @@ public class MyGraphics {
         this.g2 = g2;
     }
 
-    public void setFillColor(Color color) {
-        this.fillColor = color;
-    }
-    public void setOutlineColor(Color color) {
-        this.outlineColor = color;
-    }
-
     private boolean colorIn(int x, int y, Color color, String type) {
         if(x >= 0 && x < Main.screen[1].length && y >= 0 && y < Main.screen[1][0].length) {
             Main.screen[1][x][y] = color;
