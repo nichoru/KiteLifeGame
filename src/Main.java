@@ -15,6 +15,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private int xOffset = 8;
     private int yOffset = 31;
     private static int screenPixelSize = 150;
+    private MyGraphics mg = new MyGraphics(Color.BLACK);
     private Kite player;
     private Cloud cloud1;
     private Cloud cloud2;
@@ -48,25 +49,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(screenPixelSize, Color.YELLOW);
-        cloud1 = new Cloud(screenPixelSize);
-        cloud2 = new Cloud(screenPixelSize);
-        cloud3 = new Cloud(screenPixelSize);
-        for(int i = 0; i < screenPixelSize; i++) {
-            for(int j = 0; j < screenPixelSize; j++) {
-                screen[0][i][j] = Color.BLACK;
-                screenType[i][j] = "background";
-            }
-        }
-
-        while(player.isAlive()) {
-            try{
-                repaint();
-                Thread.sleep(UPDATE_SPEED);
-            } catch(InterruptedException e) {
-                System.out.println(e);
-            }
-        }
+        player = new Kite(screenPixelSize, Color.YELLOW, 0);
+        kiteClassic();
+        clearScreen();
+        repaint();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -86,6 +72,34 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         System.out.println("click at "+e.getX()+", "+e.getY());
     }
 
+    public void clearScreen() {
+        for(int i = 0; i < screenPixelSize; i++) {
+            for(int j = 0; j < screenPixelSize; j++) {
+                screen[0][i][j] = Color.BLACK;
+                screenType[i][j] = "background";
+            }
+        }
+    }
+
+    public void kiteClassic() {
+        cloud1 = new Cloud(screenPixelSize);
+        cloud2 = new Cloud(screenPixelSize);
+        cloud3 = new Cloud(screenPixelSize);
+        clearScreen();
+
+        while(player.isAlive()) {
+            try{
+                repaint();
+                player.gainXP(0.05F);
+                Thread.sleep(UPDATE_SPEED);
+            } catch(InterruptedException e) {
+                System.out.println(e);
+            }
+        }
+
+        System.out.println(player.getXP());
+    }
+
     @Override
     public void paint(Graphics g) {
         if(isStart) {
@@ -94,8 +108,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             isStart = false;
         }
         Graphics2D g2 = (Graphics2D) g;
-
-        MyGraphics mg = new MyGraphics((float) windowWidth/(float) screenPixelSize, g2);
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {

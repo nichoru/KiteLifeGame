@@ -1,14 +1,13 @@
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class MyGraphics {
-    private Color fillColor = Color.WHITE;
-    private Color outlineColor = Color.BLACK;
-    private float pixelWidth;
-    private Graphics2D g2;
+    private Color outlineColor;
 
-    public MyGraphics(float pixelWidth, Graphics2D g2) {
-        this.pixelWidth = pixelWidth;
-        this.g2 = g2;
+    public MyGraphics(Color oc) {
+        this.outlineColor = oc;
     }
 
     private boolean colorIn(int x, int y, Color color, String type) {
@@ -56,4 +55,16 @@ public class MyGraphics {
         return collision;
     }
 
+    public void drawFile(String fileName, int x, int y, String type, boolean isOutlineColor) {
+        File myFile = new File(fileName);
+        try {
+            Scanner fileReader = new Scanner(myFile);
+            for(int i=0; i < fileReader.nextInt(); i++) {
+                if(isOutlineColor) colorIn(x+fileReader.nextInt(), y+fileReader.nextInt(), this.outlineColor, type);
+                else colorIn(x+fileReader.nextInt(), y+fileReader.nextInt(), new Color(fileReader.nextInt(), fileReader.nextInt(), fileReader.nextInt()), type);
+            }
+        } catch(IOException e) {
+            System.out.println("File not found");
+        }
+    }
 }

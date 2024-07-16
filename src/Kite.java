@@ -10,15 +10,17 @@ public class Kite {
     private Color fillColor;
     private int immunity = 0;
     private int screenSize;
+    private float xp;
 
-    public Kite(int screenSize, Color color) {
-        this.width = screenSize/20;
+    public Kite(int screenSize, Color color, float xp) {
+        this.screenSize = screenSize;
+        this.width = this.screenSize/20;
         this.height = this.width*5/3;
         this.lives = 4;
-        this.x = 50;
-        this.y = 50;
+        this.x = this.screenSize/2;
+        this.y = this.screenSize/2;
         this.fillColor = color;
-        this.screenSize = screenSize;
+        this.xp = xp;
     }
 
     public void show(MyGraphics g, int mouseX, int mouseY) { // draws the kite on screen and does collision
@@ -50,5 +52,13 @@ public class Kite {
 
     public boolean isAlive() {
         return this.lives != 0;
+    }
+
+    public void gainXP(float amountXP) {
+        this.xp += amountXP;
+    }
+
+    public int getXP() {
+        return (int) this.xp;
     }
 }

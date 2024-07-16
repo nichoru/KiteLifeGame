@@ -34,7 +34,7 @@ public class Cloud {
 
     public void regenerate() {
         this.x = (int) (Math.random()*screenSize);
-        this.y = (int) (-Math.random()*screenSize);
+        this.y = (int) (-Math.random()*screenSize-5*scale/144);
         this.gray1 = (int) (Math.random()*75 + 125);
         this.gray2 = (int) (Math.random()*75 + 125);
         this.gray3 = (int) (Math.random()*75 + 125);
