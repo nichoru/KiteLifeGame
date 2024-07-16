@@ -17,6 +17,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private static int screenPixelSize = 150;
     private MyGraphics mg = new MyGraphics(Color.BLACK);
     private Kite player;
+    public static String nextGame;
+    public static boolean isHome = false;
+    private Kite classic;
+    private boolean isClassic = false;
     private Cloud cloud1;
     private Cloud cloud2;
     private Cloud cloud3;
@@ -49,10 +53,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(screenPixelSize, Color.YELLOW, 0);
-        kiteClassic();
-        clearScreen();
-        repaint();
+        player = new Kite(screenPixelSize, Color.YELLOW, 0, "player");
+        kiteHome();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -75,36 +77,51 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void clearScreen() {
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
-                screen[0][i][j] = Color.BLACK;
-                screenType[i][j] = "background";
+                screen[0][i][j] = null;
             }
         }
     }
-
-    public void kiteClassic() {
-        cloud1 = new Cloud(screenPixelSize);
-        cloud2 = new Cloud(screenPixelSize);
-        cloud3 = new Cloud(screenPixelSize);
-        clearScreen();
-
+    public void runGame(float updateXP) {
         while(player.isAlive()) {
             try{
                 repaint();
-                player.gainXP(0.05F);
+                player.gainXP(updateXP);
                 Thread.sleep(UPDATE_SPEED);
             } catch(InterruptedException e) {
                 System.out.println(e);
             }
         }
+        player.resurrect();
+    }
+
+    public void kiteHome() {
+        isHome = true;
+        classic = new Kite(screenPixelSize, Color.MAGENTA, 0, "classic");
+        runGame(0F);
+        isHome = false;
+        switch(nextGame) {
+            case "classic":
+                kiteClassic();
+        }
+    }
+    public void kiteClassic() {
+        isClassic = true;
+        cloud1 = new Cloud(screenPixelSize);
+        cloud2 = new Cloud(screenPixelSize);
+        cloud3 = new Cloud(screenPixelSize);
+        clearScreen();
+
+        runGame(0.05F);
 
         System.out.println(player.getXP());
+        isClassic = false;
+        kiteHome();
     }
 
     @Override
     public void paint(Graphics g) {
         if(isStart) {
             super.paint(g);
-            System.out.println("yep");
             isStart = false;
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -116,7 +133,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             }
         }
 
-        if(cloud1 != null) {
+        if(isHome) {
+            classic.show(mg, screenPixelSize/2, screenPixelSize/2);
+        }
+        if(isClassic) {
             cloud1.move();
             cloud1.show(mg);
             cloud2.move();
