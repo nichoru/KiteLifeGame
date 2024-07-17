@@ -53,7 +53,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(screenPixelSize, Color.YELLOW, 0, "player");
+        player = new Kite(screenPixelSize, Color.WHITE, 0, "player");
         kiteHome();
     }
 
@@ -96,7 +96,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
     public void kiteHome() {
         isHome = true;
-        classic = new Kite(screenPixelSize, Color.MAGENTA, 0, "classic");
+        classic = new Kite(screenPixelSize, Color.RED, 0, "classic");
         runGame(0F);
         isHome = false;
         switch(nextGame) {
@@ -111,10 +111,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         cloud3 = new Cloud(screenPixelSize);
         clearScreen();
 
-        runGame(0.05F);
+        runGame(0.01F);
 
         System.out.println(player.getXP());
         isClassic = false;
+        player.changeColor(new Color(255, 255-player.getXP(), 255-player.getXP()), 3);
         kiteHome();
     }
 

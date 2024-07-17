@@ -7,7 +7,7 @@ public class Kite {
     private int height;
     private int lives;
     private Color outlineColor = Color.BLACK;
-    private Color fillColor;
+    private Color[] fillColor = new Color[4];
     private int immunity = 0;
     private int screenSize;
     private float xp;
@@ -20,7 +20,7 @@ public class Kite {
         this.lives = 4;
         this.x = this.screenSize/2;
         this.y = this.screenSize/2;
-        this.fillColor = color;
+        for (int i = 0; i < 4; i++) this.fillColor[i] = color;
         this.xp = xp;
         this.type = type;
     }
@@ -37,10 +37,10 @@ public class Kite {
         if(this.y > this.screenSize - this.height) this.y = this.screenSize - this.height;
 
         // draws the kite based on how many lives are left, and if it's drawn on top of an obstacle, collision is set to true
-        if(this.lives == 4) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, fillColor, outlineColor, this.type)) collision = true;
-        if(this.lives >= 3) if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, -1, fillColor, outlineColor, this.type)) collision = true;
-        if(this.lives >= 2) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, 1, fillColor, outlineColor,  this.type)) collision = true;
-        if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, fillColor, outlineColor, this.type)) collision = true;
+        if(this.lives == 4) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, fillColor[3], outlineColor, this.type)) collision = true;
+        if(this.lives >= 3) if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, -1, fillColor[2], outlineColor, this.type)) collision = true;
+        if(this.lives >= 2) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, 1, fillColor[1], outlineColor,  this.type)) collision = true;
+        if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, fillColor[0], outlineColor, this.type)) collision = true;
         if(immunity > 0) immunity--; // if the kite recently lost a life (or has immunity for any other reason), decrease the timer on this
         else if(collision) loseLife(); // if the kite doesn't have immunity and is on top of an obstacle, lose a life
     }
@@ -60,8 +60,13 @@ public class Kite {
         this.lives = 4;
     }
 
+    public void changeColor(Color color, int triangle) {
+        this.fillColor[triangle] = color;
+    }
+
     public void gainXP(float amountXP) {
         this.xp += amountXP;
+        if(this.xp>255) this.xp = 255;
     }
 
     public int getXP() {
