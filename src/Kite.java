@@ -10,7 +10,7 @@ public class Kite {
     private Color[] fillColor = new Color[4];
     private int immunity = 0;
     private int screenSize;
-    private float xp;
+    private float[] xp = new float[4];
     private String type;
 
     public Kite(int screenSize, Color color, float xp, String type) {
@@ -21,7 +21,7 @@ public class Kite {
         this.x = this.screenSize/2;
         this.y = this.screenSize/2;
         for (int i = 0; i < 4; i++) this.fillColor[i] = color;
-        this.xp = xp;
+        for(int i = 0; i < this.xp.length; i++) this.xp[i] = xp;
         this.type = type;
     }
 
@@ -60,16 +60,16 @@ public class Kite {
         this.lives = 4;
     }
 
-    public void changeColor(Color color, int triangle) {
-        this.fillColor[triangle] = color;
+    public void changeColor(Color color) {
+        this.fillColor[Main.currentGame] = color;
     }
 
     public void gainXP(float amountXP) {
-        this.xp += amountXP;
-        if(this.xp>255) this.xp = 255;
+        this.xp[Main.currentGame] += amountXP;
+        if(this.xp[Main.currentGame]>255) this.xp[Main.currentGame] = 255;
     }
 
     public int getXP() {
-        return (int) this.xp;
+        return (int) this.xp[Main.currentGame];
     }
 }

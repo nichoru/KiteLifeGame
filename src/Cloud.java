@@ -21,7 +21,6 @@ public class Cloud {
     public void move() {
         this.y+=this.speed;
         this.speed+= 0.001F;
-        System.out.println(this.speed);
         if(this.y > this.screenSize + 5*scale/144) this.regenerate();
     }
 

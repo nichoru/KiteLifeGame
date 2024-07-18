@@ -16,8 +16,8 @@ public class MyGraphics {
             if(Main.screenType[x][y].equals(type) || Main.screenType[x][y].equals("background")) {
                 Main.screenType[x][y] = type;
             } else {
-                if(Main.isHome) {
-                    Main.nextGame = Main.screenType[x][y];
+                if(Main.currentGame == 4) {
+                    Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
                 }
                 Main.screenType[x][y] = type;
                 return true;
