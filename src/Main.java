@@ -134,7 +134,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     }
     public void kiteSimon() {
         currentGame = 0;
-        simonTimer = 0;
+        simonTimer = 1-immuneTime;
         simonOrder = new int[16];
         for(int i = 0; i < simonOrder.length; i++) {
             if(i<3) simonOrder[i] = (int) Math.floor(Math.random()*4);
@@ -164,7 +164,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         switch(currentGame) {
             case 0:
                 if(simonOrder[simonTimer/immuneTime] != 4) {
-                    if(simonTimer%immuneTime == 0) buttons[simonTimer/immuneTime].loseLife();
+                    if(simonTimer%immuneTime == 0) {
+                        buttons[simonOrder[simonTimer/immuneTime]].loseLife();
+                    }
+                    player.makeImmune(1);
                     simonTimer++;
                 }
                 showButtons();
