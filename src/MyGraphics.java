@@ -26,7 +26,7 @@ public class MyGraphics {
         return false;
     }
 
-    public void makeColoredCircle(int x, int y, int radius, Color f, Color o, String type) {
+    public void makeColoredCircle(int x, int y, int radius, Color f, String type) {
         for(int i=0; i < radius; i++) {
             for(int j=0; j < radius; j++) {
                 if(i*i+j*j < radius*radius) {

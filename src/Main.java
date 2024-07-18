@@ -21,6 +21,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static int nextGame;
     private Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
+    private int immuneTime = 50;
+    private int simonTimer;
+    private int[] simonOrder;
     private Cloud cloud1;
     private Cloud cloud2;
     private Cloud cloud3;
@@ -54,6 +57,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.setVisible(true);
 
         player = new Kite(screenPixelSize, Color.WHITE, 0, "player");
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"");
         kiteHome();
     }
 
@@ -96,10 +100,14 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         }
         player.resurrect();
     }
+    public void showButtons() {
+        for(int i = 0; i < buttons.length; i++) {
+            buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
+        }
+    }
 
     public void kiteHome() {
         currentGame = 4;
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"");
         runGame(0F);
         switch(nextGame) {
             case 0:
@@ -126,6 +134,12 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     }
     public void kiteSimon() {
         currentGame = 0;
+        simonTimer = 0;
+        simonOrder = new int[16];
+        for(int i = 0; i < simonOrder.length; i++) {
+            if(i<3) simonOrder[i] = (int) Math.floor(Math.random()*4);
+            else simonOrder[i] = 4;
+        }
 
         runGame(0F);
 
@@ -149,6 +163,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         switch(currentGame) {
             case 0:
+                if(simonOrder[simonTimer/immuneTime] != 4) {
+                    if(simonTimer%immuneTime == 0) buttons[simonTimer/immuneTime].loseLife();
+                    simonTimer++;
+                }
+                showButtons();
                 break;
             case 1:
                 break;
@@ -163,9 +182,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 cloud3.show(mg);
                 break;
             case 4:
-                for(int i = 0; i < buttons.length; i++) {
-                    buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
-                }
+                showButtons();
         }
 
         if(player != null) player.show(mg, mouseX, mouseY);
