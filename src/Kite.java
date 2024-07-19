@@ -90,4 +90,13 @@ public class Kite {
     public int getXP() {
         return (int) this.xp[Main.currentGame];
     }
+
+    public int getWidth() {
+        if(this.lives > 1) return this.width*2-1;
+        return this.width;
+    }
+    public int getHeight() {
+        if(this.lives > 2) return this.height*2-1;
+        return this.height;
+    }
 }
