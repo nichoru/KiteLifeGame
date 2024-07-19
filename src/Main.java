@@ -85,6 +85,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 screen[0][i][j] = null;
             }
         }
+        System.out.println("cleared");
     }
     public void runGame(float updateXP) {
         while(player.isAlive()) {
@@ -101,16 +102,19 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             System.out.println(player.getXP());
         }
         player.resurrect();
+        for(int i = 0; i < buttons.length; i++) buttons[i].resurrect();
     }
     public void showButtons() {
         for(int i = 0; i < buttons.length; i++) {
-            buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
+            if(buttons[i].isAlive()) buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
         }
     }
 
     public void kiteHome() {
         currentGame = 4;
+        clearScreen();
         runGame(0F);
+        clearScreen();
         switch(nextGame) {
             case 0:
                 kiteSimon();
@@ -128,7 +132,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         cloud1 = new Cloud(screenPixelSize);
         cloud2 = new Cloud(screenPixelSize);
         cloud3 = new Cloud(screenPixelSize);
-        clearScreen();
 
         runGame(0.01F);
 
@@ -152,7 +155,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void paint(Graphics g) {
         if(isStart) {
             super.paint(g);
-            System.out.println("ahhh");
+            System.out.println("start");
         }
         Graphics2D g2 = (Graphics2D) g;
 
