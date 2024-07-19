@@ -126,6 +126,13 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 kiteClassic();
         }
     }
+    public void kiteNeedle() {
+        currentGame = 2;
+
+        runGame(0.01F);
+
+        kiteHome();
+    }
     public void kiteClassic() {
         currentGame = 3;
         cloud1 = new Cloud(screenPixelSize);
