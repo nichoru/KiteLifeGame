@@ -38,7 +38,7 @@ public class Kite {
         if(this.y < this.height && this.lives >= 3) this.y = this.height;
         if(this.y > this.screenSize - this.height) this.y = this.screenSize - this.height;
 
-        if(this.immunity > 0 && !this.type.equals("player")) g.makeColoredCircle(this.x, this.y, this.height*3/2, new Color(255-((255-this.fillColor[this.lives].getRed())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[this.lives].getGreen())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[this.lives].getBlue())*(255*this.immunity/this.maxImmunity))/255), "background");
+        if(this.immunity > 0 && !this.type.equals("player") && this.isAlive()) g.makeColoredCircle(this.x, this.y, this.height*3/2, new Color(255-((255-this.fillColor[this.lives-1].getRed())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[this.lives-1].getGreen())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[this.lives-1].getBlue())*(255*this.immunity/this.maxImmunity))/255), "background");
         // draws the kite based on how many lives are left, and if it's drawn on top of an obstacle, collision is set to true
         if(this.lives == 4) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, this.fillColor[3], this.outlineColor, this.type)) collision = true;
         if(this.lives >= 3) if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, -1, this.fillColor[2], this.outlineColor, this.type)) collision = true;
@@ -55,8 +55,19 @@ public class Kite {
         }
     }
 
+    public void gainLife() {
+        if(this.lives < 4) {
+            this.lives++;
+            this.immunity = this.maxImmunity;
+        }
+    }
+
     public void makeImmune(int time) {
         this.immunity = time;
+    }
+
+    public boolean isImmune() {
+        return this.immunity > 0;
     }
 
     public boolean isAlive() {

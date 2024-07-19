@@ -16,8 +16,21 @@ public class MyGraphics {
             if(Main.screenType[x][y].equals(type) || Main.screenType[x][y].equals("background")) {
                 Main.screenType[x][y] = type;
             } else {
-                if(Main.currentGame == 4) {
+                if(Main.simonCounter < Main.simonTimer/Main.immuneTime) {
+                    if(Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.screenType[x][y])) {
+                        if(!Main.buttons[Main.simonOrder[Main.simonCounter]].isImmune()) {
+                            Main.buttons[Main.simonOrder[Main.simonCounter]].gainLife();
+                            Main.simonCounter++;
+                        }
+                        Main.screenType[x][y] = type;
+                        return false;
+                    }
+                } else if(Main.currentGame == 4) {
                     Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
+                }
+                if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.buttons[Main.simonOrder[Main.simonCounter-1]].isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.screenType[x][y])) {
+                    Main.screenType[x][y] = type;
+                    return false;
                 }
                 Main.screenType[x][y] = type;
                 return true;

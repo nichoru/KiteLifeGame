@@ -19,11 +19,12 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private Kite player;
     public static int currentGame;
     public static int nextGame;
-    private Kite[] buttons = new Kite[4];
+    public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    private int immuneTime = 50;
-    private int simonTimer;
-    private int[] simonOrder;
+    public static int immuneTime = 50;
+    public static int simonTimer;
+    public static int[] simonOrder;
+    public static int simonCounter;
     private Cloud cloud1;
     private Cloud cloud2;
     private Cloud cloud3;
@@ -97,6 +98,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         }
         if(currentGame != 4) {
             player.changeColor(new Color(255-((255-buttonColors[currentGame].getRed())*player.getXP())/255, 255-((255-buttonColors[currentGame].getGreen())*player.getXP())/255, 255-((255-buttonColors[currentGame].getBlue())*player.getXP())/255));
+            System.out.println(player.getXP());
         }
         player.resurrect();
     }
@@ -150,7 +152,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void paint(Graphics g) {
         if(isStart) {
             super.paint(g);
-            isStart = false;
+            System.out.println("ahhh");
         }
         Graphics2D g2 = (Graphics2D) g;
 
@@ -163,12 +165,24 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         switch(currentGame) {
             case 0:
+                if(simonCounter<simonOrder.length) {
+                    if(simonOrder[simonCounter] == 4) {
+                        simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
+                        while(!buttons[simonOrder[simonCounter]].isAlive()) simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
+                        simonTimer = 1 - immuneTime;
+                        player.gainXP(simonCounter * 2);
+                    }
+                }
+
                 if(simonOrder[simonTimer/immuneTime] != 4) {
+                    simonCounter = simonOrder.length;
                     if(simonTimer%immuneTime == 0) {
                         buttons[simonOrder[simonTimer/immuneTime]].loseLife();
                     }
                     player.makeImmune(1);
                     simonTimer++;
+                } else {
+                    if(simonCounter == simonOrder.length) simonCounter = 0;
                 }
                 showButtons();
                 break;
@@ -192,12 +206,13 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
-                if(screen[0][i][j] != screen[1][i][j]) {
+                if(screen[0][i][j] != screen[1][i][j] || isStart) {
                     g2.setColor(screen[1][i][j]);
                     g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
                     screen[0][i][j] = screen[1][i][j];
                 }
             }
         }
+        if(isStart) isStart = false;
     }
 }
