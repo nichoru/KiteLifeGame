@@ -58,15 +58,28 @@ public class MyGraphics {
         if(h<w) {
             for (int i = 0; i < w; i++) {
                 for(int j = 0; j < w-i; j++) if(colorIn(x+i*xD, y+yD*((j+1)*h/w), fill, type)) collision = true;
-                if(colorIn(x + i * xD, y - yD * (h + i * h / w), outline, type)) collision = true;
             }
         } else for(int i=0; i < h; i++) {
             for(int j = 0; j < h-i; j++) if(colorIn(x+xD*((j+1)*w/h),y+i*yD,fill, type)) collision = true;
-            if(colorIn(x+xD*(w-i*w/h),y+i*yD,outline, type)) collision = true;
         }
 
-        for(int i=0; i < w; i++) if(colorIn(x+i*xD,y,outline, type)) collision = true;
-        for(int i=0; i < h; i++) if(colorIn(x,y+i*yD,outline, type)) collision = true;
+        if(makeLine(x, y, w, h, xD, yD, outline, type)) collision = true;
+        if(makeLine(x, y, w, 0, xD, yD, outline, type)) collision = true;
+        if(makeLine(x, y, 0, h, xD, yD, outline, type)) collision = true;
+
+        return collision;
+    }
+
+    public boolean makeLine(int x, int y, int w, int h, int xD, int yD, Color c, String type) {
+        boolean collision = false;
+
+        if(h<w) {
+            for(int i=0; i < w; i++) {
+                if(colorIn(x+i*xD, y-yD*(h+i*h/w), c, type)) collision = true;
+            }
+        } else for(int i=0; i < h; i++) {
+            if(colorIn(x+xD*(w-i*w/h), y+i*yD, c, type)) collision = true;
+        }
 
         return collision;
     }

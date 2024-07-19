@@ -121,6 +121,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             case 1:
                 break;
             case 2:
+                kiteNeedle();
                 break;
             case 3:
                 kiteClassic();
