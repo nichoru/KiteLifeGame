@@ -88,6 +88,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         System.out.println("cleared");
     }
     public void runGame(float updateXP) {
+        clearScreen();
         while(player.isAlive()) {
             try{
                 repaint();
@@ -112,9 +113,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
     public void kiteHome() {
         currentGame = 4;
-        clearScreen();
         runGame(0F);
-        clearScreen();
         switch(nextGame) {
             case 0:
                 kiteSimon();
@@ -148,6 +147,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         runGame(0F);
 
+        simonCounter = simonOrder.length;
         kiteHome();
     }
 

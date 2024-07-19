@@ -27,6 +27,7 @@ public class MyGraphics {
                     }
                 } else if(Main.currentGame == 4) {
                     Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
+                    System.out.println(Main.screenType[x][y]);
                 }
                 if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.buttons[Main.simonOrder[Main.simonCounter-1]].isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.screenType[x][y])) {
                     Main.screenType[x][y] = type;
