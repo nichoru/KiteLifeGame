@@ -7,8 +7,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private Canvas canvas = new Canvas();
     private String title = "Kite Life";
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int windowWidth = screenSize.width/2;
-    private int windowHeight = screenSize.height/2;
+    private int windowWidth = screenSize.width/3;
+    private int windowHeight = screenSize.height/3;
     private int mouseX;
     private int mouseY;
     private int xOffset = 8;
@@ -16,7 +16,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private static int screenPixelSize = 150;
     private MyGraphics mg = new MyGraphics(Color.BLACK);
     private Kite player;
-    public static int currentGame;
+    public static int game;
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -45,7 +45,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         window.setPreferredSize(new Dimension(windowWidth, windowHeight));
         window.add(canvas);
 
-        setLocation((screenSize.width-windowWidth)/2, (screenSize.height-windowHeight)/2); // centres the window on the user's screen
+        setLocation((game%2)*(screenSize.width-windowWidth), ((3-game)/2)*(screenSize.height-windowHeight)); // centres the window on the user's screen
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -55,6 +55,18 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.setVisible(true);
 
         player = new Kite(screenPixelSize, Color.WHITE, 0, "player");
+        switch(game) {
+            case 0:
+                kiteSimon();
+                break;
+            case 1:
+                break;
+            case 2:
+                kiteNeedle();
+                break;
+            case 3:
+                kiteClassic();
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -93,12 +105,10 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                 System.out.println(e);
             }
         }
-        if(currentGame != 4) {
-            player.changeColor(new Color(255-((255-buttonColors[currentGame].getRed())*player.getXP())/255, 255-((255-buttonColors[currentGame].getGreen())*player.getXP())/255, 255-((255-buttonColors[currentGame].getBlue())*player.getXP())/255));
+        if(game != 4) {
+            player.changeColor(new Color(255-((255-buttonColors[game].getRed())*player.getXP())/255, 255-((255-buttonColors[game].getGreen())*player.getXP())/255, 255-((255-buttonColors[game].getBlue())*player.getXP())/255));
             System.out.println(player.getXP());
         }
-        player.resurrect();
-        for(int i = 0; i < buttons.length; i++) buttons[i].resurrect();
     }
     public void showButtons() {
         for(int i = 0; i < buttons.length; i++) {
@@ -106,43 +116,28 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         }
     }
 
-    public void kiteHome() {
-        currentGame = 4;
-        runGame(0F);
-        switch(nextGame) {
-            case 0:
-                kiteSimon();
-                break;
-            case 1:
-                break;
-            case 2:
-                kiteNeedle();
-                break;
-            case 3:
-                kiteClassic();
-        }
-    }
     public void kiteNeedle() {
-        currentGame = 2;
+        game = 2;
         xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
         yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
+        System.out.println("needlehi");
 
         runGame(0.01F);
 
-        kiteHome();
+        //kiteHome();
     }
     public void kiteClassic() {
-        currentGame = 3;
+        game = 3;
         cloud1 = new Cloud(screenPixelSize);
         cloud2 = new Cloud(screenPixelSize);
         cloud3 = new Cloud(screenPixelSize);
 
         runGame(0.01F);
 
-        kiteHome();
+        //kiteHome();
     }
     public void kiteSimon() {
-        currentGame = 0;
+        game = 0;
         simonTimer = 1-immuneTime;
         simonOrder = new int[16];
         for(int i = 0; i < simonOrder.length; i++) {
@@ -150,10 +145,11 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             else simonOrder[i] = 4;
         }
 
+        System.out.println("simonhi");
         runGame(0F);
 
         simonCounter = simonOrder.length;
-        kiteHome();
+        //kiteHome();
     }
 
     @Override
@@ -171,7 +167,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             }
         }
 
-        switch(currentGame) {
+        switch(game) {
             case 0:
                 if(simonCounter<simonOrder.length) {
                     if(simonOrder[simonCounter] == 4) {

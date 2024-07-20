@@ -117,7 +117,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void kiteHome() {
         currentGame = 4;
         runGame(0F);
-        currentMinigame = new Minigame(currentGame);
+        currentGame = nextGame;
+        currentMinigame = new Minigame(nextGame);
+        player.resurrect();
+        kiteHome();
     }
     public void kiteNeedle() {
         currentGame = 2;
