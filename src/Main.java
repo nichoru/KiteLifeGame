@@ -16,9 +16,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private int yOffset = 31;
     private static int screenPixelSize = 150;
     private MyGraphics mg = new MyGraphics(Color.BLACK);
-    private Kite player;
+    public static Kite player;
     public static int currentGame;
-    private Minigame currentMinigame;
+    public static Minigame currentMinigame;
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -32,7 +32,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private Cloud cloud2;
     private Cloud cloud3;
     public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
+    public static Color[][][] currentScreen = screen;
     public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
+    public static String[][] currentScreenType = screenType;
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
 
@@ -70,7 +72,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     }
 
     public void mouseExited(MouseEvent e) {System.out.println("exit");}
-    public void mouseEntered(MouseEvent e) {System.out.println("enter");}
+    public void mouseEntered(MouseEvent e) {
+        System.out.println("enter");
+
+    }
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseMoved(MouseEvent e) {
@@ -158,6 +163,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
     @Override
     public void paint(Graphics g) {
+        currentScreen = screen;
+        currentScreenType = screenType;
         if(isStart) {
             super.paint(g);
             System.out.println("start");
@@ -197,18 +204,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             case 1:
                 break;
             case 2:
-                xNeedle.move(player.getHeight());
-                xNeedle.show(mg);
-                yNeedle.move(player.getWidth());
-                yNeedle.show(mg);
                 break;
             case 3:
-                cloud1.move();
-                cloud1.show(mg);
-                cloud2.move();
-                cloud2.show(mg);
-                cloud3.move();
-                cloud3.show(mg);
                 break;
             case 4:
                 showButtons();

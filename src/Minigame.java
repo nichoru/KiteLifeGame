@@ -54,7 +54,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(screenPixelSize, Color.WHITE, 0, "player");
+        player = Main.player;
         switch(game) {
             case 0:
                 kiteSimon();
@@ -67,6 +67,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             case 3:
                 kiteClassic();
         }
+        this.setVisible(false);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -74,7 +75,11 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     }
 
     public void mouseExited(MouseEvent e) {System.out.println("exit");}
-    public void mouseEntered(MouseEvent e) {System.out.println("enter");}
+    public void mouseEntered(MouseEvent e) {
+        System.out.println("enter");
+        Main.currentScreen = this.screen;
+        Main.currentScreenType = this.screenType;
+    }
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseMoved(MouseEvent e) {
@@ -120,7 +125,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         game = 2;
         xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
         yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
-        System.out.println("needlehi");
 
         runGame(0.01F);
 
@@ -145,7 +149,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             else simonOrder[i] = 4;
         }
 
-        System.out.println("simonhi");
         runGame(0F);
 
         simonCounter = simonOrder.length;
@@ -167,6 +170,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             }
         }
 
+        System.out.println(game);
         switch(game) {
             case 0:
                 if(simonCounter<simonOrder.length) {

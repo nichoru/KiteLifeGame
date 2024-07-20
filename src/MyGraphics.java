@@ -12,9 +12,9 @@ public class MyGraphics {
 
     private boolean colorIn(int x, int y, Color color, String type) {
         if(x >= 0 && x < Main.screen[1].length && y >= 0 && y < Main.screen[1][0].length) {
-            Main.screen[1][x][y] = color;
-            if(Main.screenType[x][y].equals(type) || Main.screenType[x][y].equals("background")) {
-                Main.screenType[x][y] = type;
+            Main.currentScreen[1][x][y] = color;
+            if(Main.currentScreenType[x][y].equals(type) || Main.currentScreenType[x][y].equals("background")) {
+                Main.currentScreenType[x][y] = type;
             } else {
                 if(Main.simonCounter < Main.simonTimer/Main.immuneTime) {
                     if(Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.screenType[x][y])) {
@@ -32,7 +32,7 @@ public class MyGraphics {
                     Main.screenType[x][y] = type;
                     return false;
                 }
-                Main.screenType[x][y] = type;
+                Main.currentScreenType[x][y] = type;
                 return true;
             }
         }
