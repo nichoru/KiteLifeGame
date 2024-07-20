@@ -25,7 +25,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
-    private Needle needle;
+    private Needle xNeedle;
+    private Needle yNeedle;
     private Cloud cloud1;
     private Cloud cloud2;
     private Cloud cloud3;
@@ -130,7 +131,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     }
     public void kiteNeedle() {
         currentGame = 2;
-        needle = new Needle(screenPixelSize, player.getHeight());
+        xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
+        yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
 
         runGame(0.01F);
 
@@ -202,8 +204,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             case 1:
                 break;
             case 2:
-                needle.move(player.getHeight());
-                needle.show(mg);
+                xNeedle.move(player.getHeight());
+                xNeedle.show(mg);
+                yNeedle.move(player.getWidth());
+                yNeedle.show(mg);
                 break;
             case 3:
                 cloud1.move();
