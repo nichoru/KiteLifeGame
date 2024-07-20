@@ -33,7 +33,6 @@ public class Needle {
             g.makeLine((int) this.x, (int) this.y + this.gap, 0, (int) (this.screenSize - this.y - this.gap), 1, 1, new Color(this.gray, this.gray, this.gray), "obstacle");
         } else {
             g.makeLine((int) this.x, (int) this.y, (int) this.x, 0, -1, 1, new Color(this.gray, this.gray, this.gray), "obstacle");
-            System.out.println("hi");
             g.makeLine((int) this.x + this.gap, (int) this.y, (int) (this.screenSize - this.x - this.gap), 0, 1, 1, new Color(this.gray, this.gray, this.gray), "obstacle");
         }
     }

@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Main extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
-
+public class Minigame extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
     private JPanel window = new JPanel();
     private Canvas canvas = new Canvas();
     private String title = "Kite Life";
@@ -18,7 +17,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private MyGraphics mg = new MyGraphics(Color.BLACK);
     private Kite player;
     public static int currentGame;
-    private Minigame currentMinigame;
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -36,11 +34,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
 
-    public static void main(String[] args) {
-        new Main();
-    } // makes a new Main object
-
-    public Main() {
+    public Minigame(int game) {
         setTitle(title);
         if(windowWidth < windowHeight) windowHeight = windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
         else windowWidth = windowHeight;
@@ -61,8 +55,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.setVisible(true);
 
         player = new Kite(screenPixelSize, Color.WHITE, 0, "player");
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"");
-        kiteHome();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -117,7 +109,18 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void kiteHome() {
         currentGame = 4;
         runGame(0F);
-        currentMinigame = new Minigame(currentGame);
+        switch(nextGame) {
+            case 0:
+                kiteSimon();
+                break;
+            case 1:
+                break;
+            case 2:
+                kiteNeedle();
+                break;
+            case 3:
+                kiteClassic();
+        }
     }
     public void kiteNeedle() {
         currentGame = 2;
