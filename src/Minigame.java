@@ -7,8 +7,9 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private Canvas canvas = new Canvas();
     private String title = "Kite Life";
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int windowWidth = screenSize.width/3;
-    private int windowHeight = screenSize.height/3;
+    private int windowWidth;
+    private int windowHeight;
+    private float scale;
     private int mouseX;
     private int mouseY;
     private int xOffset = 8;
@@ -34,18 +35,21 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
 
-    public Minigame(int game) {
+    public Minigame(int game, int windowWidth, int windowHeight) {
         setTitle(title);
-        if(windowWidth < windowHeight) windowHeight = windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
-        else windowWidth = windowHeight;
-        getContentPane().setPreferredSize(new Dimension(windowWidth, windowHeight));
+        this.scale = (float) 1/2;
+        this.windowWidth = (int) ((screenSize.width-windowWidth)*this.scale);
+        this.windowHeight = (int) ((screenSize.height-windowHeight)*this.scale);
+        if(this.windowWidth < this.windowHeight) this.windowHeight = this.windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
+        else this.windowWidth = this.windowHeight;
+        getContentPane().setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
         getContentPane().setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        window.setPreferredSize(new Dimension(windowWidth, windowHeight));
+        window.setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
         window.add(canvas);
 
-        setLocation((game%2)*(screenSize.width-windowWidth), ((3-game)/2)*(screenSize.height-windowHeight)); // centres the window on the user's screen
+        setLocation((game%2)*(screenSize.width/2)+(screenSize.width-windowWidth-this.windowWidth*2)/4, ((3-game)/2)*(screenSize.height/2)+(screenSize.height-windowHeight)/4); // centres the window on the user's screen
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -170,7 +174,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             }
         }
 
-        System.out.println(game);
         switch(game) {
             case 0:
                 if(simonCounter<simonOrder.length) {

@@ -123,7 +123,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentGame = 4;
         runGame(0F);
         currentGame = nextGame;
-        currentMinigame = new Minigame(nextGame);
+        currentMinigame = new Minigame(nextGame, windowWidth, windowHeight);
         player.resurrect();
         kiteHome();
     }
