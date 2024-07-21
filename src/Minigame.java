@@ -21,7 +21,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 50;
+    public static int immuneTime = 40;
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
@@ -83,8 +83,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public void mouseExited(MouseEvent e) {System.out.println("exit");}
     public void mouseEntered(MouseEvent e) {
         System.out.println("enter");
-        Main.currentScreen = this.screen;
-        Main.currentScreenType = this.screenType;
     }
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
@@ -148,6 +146,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     }
     public void kiteSimon() {
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
+        clearScreen();
         //game = 0;
         //simonTimer = 1-immuneTime;
 //        simonOrder = new int[16];
@@ -164,6 +163,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
     @Override
     public void paint(Graphics g) {
+        Main.currentScreen = this.screen;
+        Main.currentScreenType = this.screenType;
         if(isStart) {
             super.paint(g);
             System.out.println("start");
@@ -177,11 +178,18 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             }
         }
 
-        switch(game) {
+        switch(Main.currentGame) {
             case 0:
                 if(Main.simonCounter<Main.simonOrder.length) {
                     if(Main.simonOrder[Main.simonCounter] == 4) {
-                        for(int i = 0; i < this.buttons.length; i++) this.buttons[i].resurrect();
+                        Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
+                        while(!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive()) Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
+                        for(int i = 0; i < this.buttons.length; i++) {
+                            this.buttons[i].resurrect();
+                            Main.buttons[i].resurrect();
+                        }
+                        Main.simonTimer = 1 - Main.immuneTime;
+                        Main.player.gainXP(Main.simonCounter * 2);
                         Main.isWait = true;
                     }
                 }
@@ -201,6 +209,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             case 1:
                 break;
             case 2:
+                System.out.println(this.game);
                 xNeedle.move(player.getHeight());
                 xNeedle.show(mg);
                 yNeedle.move(player.getWidth());

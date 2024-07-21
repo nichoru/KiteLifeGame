@@ -65,6 +65,9 @@ public class Kite {
         }
     }
 
+    public void kill() {this.lives = 0;}
+
+
     public void makeImmune(int time) {
         this.immunity = time;
     }

@@ -128,6 +128,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
         if(currentGame==0) kiteSimon();
         player.resurrect();
+        currentMinigame.dispose();
         kiteHome();
     }
     public void kiteNeedle() {
@@ -182,21 +183,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         switch(currentGame) {
             case 0:
-//                if(simonCounter<simonOrder.length) {
-//                    if(simonOrder[simonCounter] == 4) {
-//                        simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
-//                        while(!buttons[simonOrder[simonCounter]].isAlive()) simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
-//                        simonTimer = 1 - immuneTime;
-//                        player.gainXP(simonCounter * 2);
-//                    }
-//                }
-
                 if(simonOrder[simonTimer/immuneTime] != 4) {
                     simonCounter = simonOrder.length;
-                    if(simonTimer%immuneTime == 0) {
-                        buttons[simonOrder[simonTimer/immuneTime]].loseLife();
-                        System.out.println("u are"+simonOrder[simonTimer/immuneTime]);
-                    }
+                    if(simonTimer%immuneTime == 0) buttons[simonOrder[simonTimer/immuneTime]].loseLife();
                     player.makeImmune(1);
                     simonTimer++;
                 } else {
@@ -207,6 +196,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     //if(simonCounter == simonOrder.length) simonCounter = 0;
                 }
                 showButtons();
+                if(simonTimer/immuneTime>simonOrder.length) player.kill();
                 break;
             case 1:
                 break;
