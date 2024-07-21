@@ -14,12 +14,12 @@ public class Kite {
     private float[] xp = new float[4];
     private String type;
 
-    public Kite(int screenSize, Color color, float xp, String type) {
+    public Kite(int screenSize, Color color, float xp, String type, int maxImmunity) {
         this.screenSize = screenSize;
         this.width = this.screenSize/20;
         this.height = this.width*5/3;
         this.lives = 4;
-        this.maxImmunity = 30;
+        this.maxImmunity = maxImmunity;
         this.x = this.screenSize/2;
         this.y = this.screenSize/2;
         for (int i = 0; i < 4; i++) this.fillColor[i] = color;
@@ -45,7 +45,10 @@ public class Kite {
         if(this.lives >= 2) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, 1, this.fillColor[1], this.outlineColor,  this.type)) collision = true;
         if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, this.fillColor[0], this.outlineColor, this.type)) collision = true;
         if(this.immunity > 0) this.immunity--; // if the kite recently lost a life (or has immunity for any other reason), decrease the timer on this
-        else if(collision) this.loseLife(); // if the kite doesn't have immunity and is on top of an obstacle, lose a life
+        else if(collision) {
+            this.loseLife(); // if the kite doesn't have immunity and is on top of an obstacle, lose a life
+            System.out.println("i am"+this.type);
+        }
     }
 
     public void loseLife() { // what happens when the kite loses a life

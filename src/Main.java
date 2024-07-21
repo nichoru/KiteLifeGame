@@ -23,7 +23,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
     public static int immuneTime = 50;
-    public static boolean isWait = false;
+    public static boolean isWait = true;
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
@@ -63,8 +63,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.toFront();
         this.setVisible(true);
 
-        player = new Kite(screenPixelSize, Color.WHITE, 0, "player");
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"");
+        player = new Kite(screenPixelSize, Color.WHITE, 0, "player", immuneTime);
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime);
         kiteHome();
     }
 
@@ -195,6 +195,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     simonCounter = simonOrder.length;
                     if(simonTimer%immuneTime == 0) {
                         buttons[simonOrder[simonTimer/immuneTime]].loseLife();
+                        System.out.println("u are"+simonOrder[simonTimer/immuneTime]);
                     }
                     player.makeImmune(1);
                     simonTimer++;

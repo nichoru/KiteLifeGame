@@ -147,7 +147,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         //kiteHome();
     }
     public void kiteSimon() {
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"");
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
         //game = 0;
         //simonTimer = 1-immuneTime;
 //        simonOrder = new int[16];
