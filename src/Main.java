@@ -23,6 +23,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
     public static int immuneTime = 50;
+    public static boolean isWait = false;
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
@@ -99,7 +100,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         clearScreen();
         while(player.isAlive()) {
             try{
-                repaint();
+                if(currentGame == 0 && !isWait) currentMinigame.repaint();
+                else repaint();
                 if(updateXP>0) player.gainXP(updateXP);
                 Thread.sleep(UPDATE_SPEED);
             } catch(InterruptedException e) {
@@ -123,7 +125,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentGame = 4;
         runGame(0F);
         currentGame = nextGame;
-        currentMinigame = new Minigame(nextGame, windowWidth, windowHeight);
+        currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+        if(currentGame==0) kiteSimon();
         player.resurrect();
         kiteHome();
     }
@@ -147,18 +150,17 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         kiteHome();
     }
     public void kiteSimon() {
-        currentGame = 0;
         simonTimer = 1-immuneTime;
         simonOrder = new int[16];
         for(int i = 0; i < simonOrder.length; i++) {
             if(i<3) simonOrder[i] = (int) Math.floor(Math.random()*4);
             else simonOrder[i] = 4;
         }
+        isWait = true;
 
         runGame(0F);
 
         simonCounter = simonOrder.length;
-        kiteHome();
     }
 
     @Override
@@ -180,14 +182,14 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         switch(currentGame) {
             case 0:
-                if(simonCounter<simonOrder.length) {
-                    if(simonOrder[simonCounter] == 4) {
-                        simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
-                        while(!buttons[simonOrder[simonCounter]].isAlive()) simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
-                        simonTimer = 1 - immuneTime;
-                        player.gainXP(simonCounter * 2);
-                    }
-                }
+//                if(simonCounter<simonOrder.length) {
+//                    if(simonOrder[simonCounter] == 4) {
+//                        simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
+//                        while(!buttons[simonOrder[simonCounter]].isAlive()) simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
+//                        simonTimer = 1 - immuneTime;
+//                        player.gainXP(simonCounter * 2);
+//                    }
+//                }
 
                 if(simonOrder[simonTimer/immuneTime] != 4) {
                     simonCounter = simonOrder.length;
@@ -197,7 +199,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     player.makeImmune(1);
                     simonTimer++;
                 } else {
-                    if(simonCounter == simonOrder.length) simonCounter = 0;
+                    System.out.println(simonTimer);
+                    simonCounter = 0;
+
+                    isWait = false;
+                    //if(simonCounter == simonOrder.length) simonCounter = 0;
                 }
                 showButtons();
                 break;

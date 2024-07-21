@@ -49,7 +49,9 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         window.setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
         window.add(canvas);
 
-        setLocation((game%2)*(screenSize.width/2)+(screenSize.width-windowWidth-this.windowWidth*2)/4, ((3-game)/2)*(screenSize.height/2)+(screenSize.height-windowHeight)/4); // centres the window on the user's screen
+        if(screenSize.width > screenSize.height) setLocation((game%2)*(screenSize.width/2+windowWidth/2)+(screenSize.width-windowWidth-this.windowWidth*2)/4, ((3-game)/2)*(screenSize.height/2)+(screenSize.height-windowHeight)/4); // centres the window on the user's screen
+        else if(screenSize.height > screenSize.width) setLocation((game%2)*(screenSize.width/2)+(screenSize.width-windowWidth)/4, ((3-game)/2)*(screenSize.height/2+windowHeight/2)+(screenSize.height-windowHeight-this.windowHeight*2)/4); // centres the window on the user's screen
+        else setLocation((game%2)*(screenSize.width/2)+(screenSize.width-windowWidth)/4, ((3-game)/2)*(screenSize.height/2)+(screenSize.height-windowHeight)/4); // centres the window on the user's screen
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -58,10 +60,10 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.toFront();
         this.setVisible(true);
 
-        player = Main.player;
+        this.player = Main.player;
         switch(game) {
             case 0:
-                kiteSimon();
+                this.kiteSimon();
                 break;
             case 1:
                 break;
@@ -71,7 +73,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             case 3:
                 kiteClassic();
         }
-        this.setVisible(false);
+        //this.setVisible(false);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -145,17 +147,18 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         //kiteHome();
     }
     public void kiteSimon() {
-        game = 0;
-        simonTimer = 1-immuneTime;
-        simonOrder = new int[16];
-        for(int i = 0; i < simonOrder.length; i++) {
-            if(i<3) simonOrder[i] = (int) Math.floor(Math.random()*4);
-            else simonOrder[i] = 4;
-        }
-
-        runGame(0F);
-
-        simonCounter = simonOrder.length;
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"");
+        //game = 0;
+        //simonTimer = 1-immuneTime;
+//        simonOrder = new int[16];
+//        for(int i = 0; i < simonOrder.length; i++) {
+//            if(i<3) simonOrder[i] = (int) Math.floor(Math.random()*4);
+//            else simonOrder[i] = 4;
+//        }
+//
+//        runGame(0F);
+//
+//        simonCounter = simonOrder.length;
         //kiteHome();
     }
 
@@ -176,25 +179,23 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
         switch(game) {
             case 0:
-                if(simonCounter<simonOrder.length) {
-                    if(simonOrder[simonCounter] == 4) {
-                        simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
-                        while(!buttons[simonOrder[simonCounter]].isAlive()) simonOrder[simonCounter] = (int) Math.floor(Math.random() * 4);
-                        simonTimer = 1 - immuneTime;
-                        player.gainXP(simonCounter * 2);
+                if(Main.simonCounter<Main.simonOrder.length) {
+                    if(Main.simonOrder[Main.simonCounter] == 4) {
+                        for(int i = 0; i < this.buttons.length; i++) this.buttons[i].resurrect();
+                        Main.isWait = true;
                     }
                 }
-
-                if(simonOrder[simonTimer/immuneTime] != 4) {
-                    simonCounter = simonOrder.length;
-                    if(simonTimer%immuneTime == 0) {
-                        buttons[simonOrder[simonTimer/immuneTime]].loseLife();
-                    }
-                    player.makeImmune(1);
-                    simonTimer++;
-                } else {
-                    if(simonCounter == simonOrder.length) simonCounter = 0;
-                }
+//
+//                if(Main.simonOrder[Main.simonTimer/Main.immuneTime] != 4) {
+//                    Main.simonCounter = Main.simonOrder.length;
+//                    if(simonTimer%immuneTime == 0) {
+//                        buttons[simonOrder[simonTimer/immuneTime]].loseLife();
+//                    }
+//                    player.makeImmune(1);
+//                    simonTimer++;
+//                } else {
+//                    if(simonCounter == simonOrder.length) simonCounter = 0;
+//                }
                 showButtons();
                 break;
             case 1:
