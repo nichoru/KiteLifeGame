@@ -196,7 +196,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     //if(simonCounter == simonOrder.length) simonCounter = 0;
                 }
                 showButtons();
-                if(simonTimer/immuneTime>simonOrder.length) player.kill();
+                if(simonTimer/immuneTime==simonOrder.length) isWait = false;
                 break;
             case 1:
                 break;

@@ -21,7 +21,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 40;
+    public static int immuneTime = 30;
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
@@ -182,14 +182,15 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             case 0:
                 if(Main.simonCounter<Main.simonOrder.length) {
                     if(Main.simonOrder[Main.simonCounter] == 4) {
+                        Main.simonTimer = 1 - Main.immuneTime;
+                        Main.player.gainXP(Main.simonCounter * 2);
+                        if(Main.simonOrder[Main.simonOrder.length-1] != 4) Main.player.kill();
                         Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
                         while(!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive()) Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
                         for(int i = 0; i < this.buttons.length; i++) {
                             this.buttons[i].resurrect();
                             Main.buttons[i].resurrect();
                         }
-                        Main.simonTimer = 1 - Main.immuneTime;
-                        Main.player.gainXP(Main.simonCounter * 2);
                         Main.isWait = true;
                     }
                 }
