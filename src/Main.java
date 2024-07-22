@@ -22,7 +22,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 50;
+    public static int immuneTime = 10;
     public static boolean isWait = true;
     public static int simonTimer;
     public static int[] simonOrder;
@@ -156,6 +156,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         for(int i = 0; i < simonOrder.length; i++) {
             if(i<3) simonOrder[i] = (int) Math.floor(Math.random()*4);
             else simonOrder[i] = 4;
+            System.out.println(simonOrder[i]);
         }
         isWait = true;
 
@@ -183,20 +184,26 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         switch(currentGame) {
             case 0:
-                if(simonOrder[simonTimer/immuneTime] != 4) {
-                    simonCounter = simonOrder.length;
-                    if(simonTimer%immuneTime == 0) buttons[simonOrder[simonTimer/immuneTime]].loseLife();
-                    player.makeImmune(1);
-                    simonTimer++;
-                } else {
+                if(simonTimer/immuneTime == simonOrder.length) {
                     System.out.println(simonTimer);
                     simonCounter = 0;
 
                     isWait = false;
-                    //if(simonCounter == simonOrder.length) simonCounter = 0;
+                } else {
+                    if (simonOrder[simonTimer / immuneTime] != 4) {
+                        simonCounter = simonOrder.length;
+                        if (simonTimer % immuneTime == 0) buttons[simonOrder[simonTimer / immuneTime]].loseLife();
+                        player.makeImmune(1);
+                        simonTimer++;
+                    } else {
+                        simonCounter = 0;
+
+                        isWait = false;
+                        //if(simonCounter == simonOrder.length) simonCounter = 0;
+                    }
                 }
                 showButtons();
-                if(simonTimer/immuneTime==simonOrder.length) isWait = false;
+                //if(simonTimer/immuneTime==simonOrder.length) isWait = false;
                 break;
             case 1:
                 break;

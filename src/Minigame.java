@@ -180,18 +180,26 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
         switch(Main.currentGame) {
             case 0:
-                if(Main.simonCounter<Main.simonOrder.length) {
-                    if(Main.simonOrder[Main.simonCounter] == 4) {
-                        Main.simonTimer = 1 - Main.immuneTime;
-                        Main.player.gainXP(Main.simonCounter * 2);
-                        if(Main.simonOrder[Main.simonOrder.length-1] != 4) Main.player.kill();
-                        Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
-                        while(!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive()) Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
-                        for(int i = 0; i < this.buttons.length; i++) {
-                            this.buttons[i].resurrect();
-                            Main.buttons[i].resurrect();
+                if(!Main.isWait) {
+                    if (Main.simonCounter < Main.simonOrder.length) {
+                        if (Main.simonOrder[Main.simonCounter] == 4) {
+                            Main.simonTimer = 1 - Main.immuneTime;
+                            Main.player.gainXP(Main.simonCounter * 2);
+                            if (Main.simonOrder[Main.simonOrder.length - 1] != 4) Main.player.kill();
+                            Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
+                            while (!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive())
+                                Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
+                            for (int i = 0; i < this.buttons.length; i++) {
+                                this.buttons[i].resurrect();
+                                Main.buttons[i].resurrect();
+                            }
+                            Main.isWait = true;
                         }
+                        showButtons();
+                    } else {
                         Main.isWait = true;
+                        Main.player.kill();
+                        Main.player.gainXP(Main.simonCounter * 2);
                     }
                 }
 //
@@ -205,7 +213,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 //                } else {
 //                    if(simonCounter == simonOrder.length) simonCounter = 0;
 //                }
-                showButtons();
                 break;
             case 1:
                 break;

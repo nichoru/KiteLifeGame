@@ -17,16 +17,17 @@ public class MyGraphics {
                 Main.currentScreenType[x][y] = type;
             } else {
                 if(!Main.isWait && Main.currentGame == 0) {
-                    if(Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.screenType[x][y])) {
-                        if(!Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].isImmune()) {
-                            Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].loseLife();
-                            Main.simonCounter++;
-                        }
+                    if(Main.simonCounter < Main.simonOrder.length) {
+                        if (Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.screenType[x][y])) {
+                            if (!Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].isImmune()) {
+                                Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].loseLife();
+                                Main.simonCounter++;
+                            }
 
-                        Main.currentMinigame.screenType[x][y] = type;
-                        return false;
+                            Main.currentMinigame.screenType[x][y] = type;
+                            return false;
+                        }
                     }
-                    System.out.println("hi"+Main.simonOrder[Main.simonCounter]);
                 } else if(Main.currentGame == 4) {
                     Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
                 }
