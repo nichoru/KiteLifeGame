@@ -21,7 +21,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 30;
+    public static int immuneTime = 35;
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;

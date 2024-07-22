@@ -22,7 +22,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 10;
+    public static int immuneTime = 50;
     public static boolean isWait = true;
     public static int simonTimer;
     public static int[] simonOrder;
