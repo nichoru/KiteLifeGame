@@ -16,7 +16,7 @@ public class MyGraphics {
             if(Main.currentScreenType[x][y].equals(type) || Main.currentScreenType[x][y].equals("background")) {
                 Main.currentScreenType[x][y] = type;
             } else {
-                if(!Main.isWait && Main.currentGame == 0) {
+                if(!Main.isWait && Main.currentGame == 1) {
                     if(Main.simonCounter < Main.simonOrder.length) {
                         if (Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.screenType[x][y])) {
                             if (!Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].isImmune()) {

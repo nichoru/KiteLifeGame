@@ -34,6 +34,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
+    private int cookieClick;
+    private int cookieSegment;
 
     public Minigame(int game, int windowWidth, int windowHeight) {
         setTitle(title);
@@ -63,15 +65,16 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.player = Main.player;
         switch(game) {
             case 0:
-                this.kiteSimon();
+                this.kiteCookie();
                 break;
             case 1:
+                this.kiteSimon();
                 break;
             case 2:
-                kiteNeedle();
+                this.kiteNeedle();
                 break;
             case 3:
-                kiteClassic();
+                this.kiteClassic();
         }
         //this.setVisible(false);
     }
@@ -93,6 +96,11 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public void mouseDragged(MouseEvent e) {System.out.println("drag");}
     public void mouseClicked(MouseEvent e) {
         System.out.println("click at "+e.getX()+", "+e.getY());
+        if(this.game == 0) {
+            if(this.cookieSegment > 0) if(this.player.getXP(this.cookieSegment) == 255) this.cookieSegment--;
+            this.player.gainXP(5, this.cookieSegment);
+            this.player.changeColor(new Color(255-((255-buttonColors[this.cookieClick].getRed())*this.player.getXP(this.cookieSegment))/255, 255-((255-buttonColors[this.cookieClick].getGreen())*this.player.getXP(this.cookieSegment))/255, 255-((255-buttonColors[this.cookieClick].getBlue())*this.player.getXP(this.cookieSegment))/255), this.cookieSegment);
+        }
     }
 
     public void clearScreen() {
@@ -105,18 +113,18 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     }
     public void runGame(float updateXP) {
         clearScreen();
-        while(player.isAlive()) {
+        while(this.player.isAlive()) {
             try{
                 repaint();
-                if(updateXP>0) player.gainXP(updateXP);
+                if(updateXP>0) Main.player.gainXP(updateXP, this.game);
                 Thread.sleep(UPDATE_SPEED);
             } catch(InterruptedException e) {
                 System.out.println(e);
             }
         }
         if(game != 4) {
-            player.changeColor(new Color(255-((255-buttonColors[game].getRed())*player.getXP())/255, 255-((255-buttonColors[game].getGreen())*player.getXP())/255, 255-((255-buttonColors[game].getBlue())*player.getXP())/255));
-            System.out.println(player.getXP());
+            Main.player.changeColor(new Color(255-((255-buttonColors[game].getRed())*Main.player.getXP(this.game))/255, 255-((255-buttonColors[game].getGreen())*Main.player.getXP(this.game))/255, 255-((255-buttonColors[game].getBlue())*Main.player.getXP(this.game))/255), this.game);
+            System.out.println(Main.player.getXP(this.game));
         }
     }
     public void showButtons() {
@@ -125,6 +133,14 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         }
     }
 
+    public void kiteCookie() {
+        this.game = 0;
+        this.cookieClick = buttons.length-1;
+        this.cookieSegment = this.buttons.length-1;
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
+
+        runGame(0F);
+    }
     public void kiteNeedle() {
         game = 2;
         xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
@@ -180,11 +196,14 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
         switch(Main.currentGame) {
             case 0:
+                showButtons();
+                break;
+            case 1:
                 if(!Main.isWait) {
                     if (Main.simonCounter < Main.simonOrder.length) {
                         if (Main.simonOrder[Main.simonCounter] == 4) {
                             Main.simonTimer = 1 - Main.immuneTime;
-                            Main.player.gainXP(Main.simonCounter * 2);
+                            Main.player.gainXP(Main.simonCounter * 2, this.game);
                             if (Main.simonOrder[Main.simonOrder.length - 1] != 4) Main.player.kill();
                             Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
                             while (!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive())
@@ -199,7 +218,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                     } else {
                         Main.isWait = true;
                         Main.player.kill();
-                        Main.player.gainXP(Main.simonCounter * 2);
+                        Main.player.gainXP(Main.simonCounter * 2, this.game);
                     }
                 }
 //
@@ -213,8 +232,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 //                } else {
 //                    if(simonCounter == simonOrder.length) simonCounter = 0;
 //                }
-                break;
-            case 1:
                 break;
             case 2:
                 System.out.println(this.game);

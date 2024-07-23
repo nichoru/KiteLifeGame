@@ -81,17 +81,17 @@ public class Kite {
         this.lives = 4;
     }
 
-    public void changeColor(Color color) {
-        this.fillColor[Main.currentGame] = color;
+    public void changeColor(Color color, int segment) {
+        this.fillColor[segment] = color;
     }
 
-    public void gainXP(float amountXP) {
-        this.xp[Main.currentGame] += amountXP;
-        if(this.xp[Main.currentGame]>255) this.xp[Main.currentGame] = 255;
+    public void gainXP(float amountXP, int segment) {
+        this.xp[segment] += amountXP;
+        if(this.xp[segment]>255) this.xp[segment] = 255;
     }
 
-    public int getXP() {
-        return (int) this.xp[Main.currentGame];
+    public int getXP(int segment) {
+        return (int) this.xp[segment];
     }
 
     public int getWidth() {

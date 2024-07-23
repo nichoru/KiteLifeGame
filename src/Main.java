@@ -100,17 +100,17 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         clearScreen();
         while(player.isAlive()) {
             try{
-                if(currentGame == 0 && !isWait) currentMinigame.repaint();
+                if(currentGame == 1 && !isWait) currentMinigame.repaint();
                 else repaint();
-                if(updateXP>0) player.gainXP(updateXP);
+                if(updateXP>0) player.gainXP(updateXP, currentGame);
                 Thread.sleep(UPDATE_SPEED);
             } catch(InterruptedException e) {
                 System.out.println(e);
             }
         }
         if(currentGame != 4) {
-            player.changeColor(new Color(255-((255-buttonColors[currentGame].getRed())*player.getXP())/255, 255-((255-buttonColors[currentGame].getGreen())*player.getXP())/255, 255-((255-buttonColors[currentGame].getBlue())*player.getXP())/255));
-            System.out.println(player.getXP());
+            player.changeColor(new Color(255-((255-buttonColors[currentGame].getRed())*player.getXP(currentGame))/255, 255-((255-buttonColors[currentGame].getGreen())*player.getXP(currentGame))/255, 255-((255-buttonColors[currentGame].getBlue())*player.getXP(currentGame))/255), currentGame);
+            System.out.println(player.getXP(currentGame));
         }
         player.resurrect();
         for(int i = 0; i < buttons.length; i++) buttons[i].resurrect();
@@ -126,7 +126,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         runGame(0F);
         currentGame = nextGame;
         currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
-        if(currentGame==0) kiteSimon();
+        if(currentGame==1) kiteSimon();
         player.resurrect();
         currentMinigame.dispose();
         kiteHome();
@@ -184,6 +184,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         switch(currentGame) {
             case 0:
+                break;
+            case 1:
                 if(simonTimer/immuneTime == simonOrder.length) {
                     System.out.println(simonTimer);
                     simonCounter = 0;
@@ -204,8 +206,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 }
                 showButtons();
                 //if(simonTimer/immuneTime==simonOrder.length) isWait = false;
-                break;
-            case 1:
                 break;
             case 2:
                 break;
