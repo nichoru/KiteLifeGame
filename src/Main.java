@@ -110,6 +110,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         }
         if(currentGame != 4) {
             player.changeColor(new Color(255-((255-buttonColors[currentGame].getRed())*player.getXP(currentGame))/255, 255-((255-buttonColors[currentGame].getGreen())*player.getXP(currentGame))/255, 255-((255-buttonColors[currentGame].getBlue())*player.getXP(currentGame))/255), currentGame);
+            System.out.println(currentGame);
             System.out.println(player.getXP(currentGame));
         }
         player.resurrect();
