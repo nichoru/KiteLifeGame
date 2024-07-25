@@ -36,6 +36,9 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
     private int cookieClick;
     private int cookieSegment;
+    private int cookieMaxTop;
+    private int cookieSegmentTop;
+    private int cookieMaxBottom;
 
     public Minigame(int game, int windowWidth, int windowHeight) {
         setTitle(title);
@@ -138,6 +141,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.game = 0;
         this.cookieClick = buttons.length-1;
         this.cookieSegment = this.buttons.length-1;
+        this.cookieMaxTop = buttons.length;
+        this.cookieMaxBottom = buttons.length;
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
 
         runGame(0F);
@@ -184,7 +189,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         Main.currentScreen = this.screen;
         Main.currentScreenType = this.screenType;
         if(isStart) {
-            super.paint(g);
+            //super.paint(g);
             System.out.println("start");
         }
         Graphics2D g2 = (Graphics2D) g;
@@ -199,7 +204,20 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         switch(Main.currentGame) {
             case 0:
                 this.player.makeImmune(1);
+                if(this.cookieMaxTop < this.buttons.length {
+                    if(this.player.getXP(this.cookieSegmentTop) == 255) {
+                        if(this.cookieSegmentTop == 3) this.cookieSegmentTop = 2;
+                        else this.cookieSegmentTop = 3;
+                    }
+
+                }
+
                 showButtons();
+                if(this.game == 0) {
+                    if(this.cookieSegment > 0) if(this.player.getXP(this.cookieSegment) == 255) this.cookieSegment--;
+                    this.player.gainXP(5, this.cookieSegment);
+                    this.player.changeColor(new Color(255-((255-buttonColors[this.cookieClick].getRed())*this.player.getXP(this.cookieSegment))/255, 255-((255-buttonColors[this.cookieClick].getGreen())*this.player.getXP(this.cookieSegment))/255, 255-((255-buttonColors[this.cookieClick].getBlue())*this.player.getXP(this.cookieSegment))/255), this.cookieSegment);
+                }
                 break;
             case 1:
                 if(!Main.isWait) {

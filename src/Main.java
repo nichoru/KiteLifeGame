@@ -171,7 +171,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentScreen = screen;
         currentScreenType = screenType;
         if(isStart) {
-            super.paint(g);
+            //super.paint(g);
             System.out.println("start");
         }
         Graphics2D g2 = (Graphics2D) g;
