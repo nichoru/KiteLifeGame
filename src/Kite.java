@@ -85,9 +85,9 @@ public class Kite {
         this.fillColor[segment] = color;
     }
 
-    public void gainXP(float amountXP, int segment) {
+    public void gainXP(float amountXP, int segment, int maxXP) {
         this.xp[segment] += amountXP;
-        if(this.xp[segment]>255) this.xp[segment] = 255;
+        if(this.xp[segment]>maxXP) this.xp[segment] = maxXP;
     }
 
     public int getXP(int segment) {

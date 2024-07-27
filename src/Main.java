@@ -102,7 +102,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             try{
                 if(currentGame == 1 && !isWait) currentMinigame.repaint();
                 else repaint();
-                if(updateXP>0) player.gainXP(updateXP, currentGame);
+                if(updateXP>0) player.gainXP(updateXP, currentGame, 255);
                 Thread.sleep(UPDATE_SPEED);
             } catch(InterruptedException e) {
                 System.out.println(e);
