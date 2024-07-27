@@ -19,6 +19,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static Kite player;
     public static int currentGame;
     public static Minigame currentMinigame;
+    public static Minigame cookieMinigame;
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -126,29 +127,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentGame = 4;
         runGame(0F);
         currentGame = nextGame;
-        currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+        if(currentGame!=0) currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+        else cookieMinigame = new Minigame(currentGame, windowWidth, windowHeight);
         if(currentGame==1) kiteSimon();
         player.resurrect();
         currentMinigame.dispose();
-        kiteHome();
-    }
-    public void kiteNeedle() {
-        currentGame = 2;
-        xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
-        yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
-
-        runGame(0.01F);
-
-        kiteHome();
-    }
-    public void kiteClassic() {
-        currentGame = 3;
-        cloud1 = new Cloud(screenPixelSize);
-        cloud2 = new Cloud(screenPixelSize);
-        cloud3 = new Cloud(screenPixelSize);
-
-        runGame(0.01F);
-
         kiteHome();
     }
     public void kiteSimon() {

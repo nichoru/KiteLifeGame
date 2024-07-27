@@ -11,7 +11,7 @@ public class MyGraphics {
     }
 
     private boolean colorIn(int x, int y, Color color, String type) {
-        if(x >= 0 && x < Main.screen[1].length && y >= 0 && y < Main.screen[1][0].length) {
+        if(x >= 0 && x < Main.currentScreen[1].length && y >= 0 && y < Main.currentScreen[1][0].length) {
             Main.currentScreen[1][x][y] = color;
             if(Main.currentScreenType[x][y].equals(type) || Main.currentScreenType[x][y].equals("background")) {
                 Main.currentScreenType[x][y] = type;
