@@ -20,6 +20,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static int currentGame;
     public static Minigame currentMinigame;
     public static Minigame cookieMinigame;
+    public static boolean isCookie;
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -28,11 +29,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
-    private Needle xNeedle;
-    private Needle yNeedle;
-    private Cloud cloud1;
-    private Cloud cloud2;
-    private Cloud cloud3;
     public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
     public static Color[][][] currentScreen = screen;
     public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
@@ -63,6 +59,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.pack();
         this.toFront();
         this.setVisible(true);
+
+        isCookie = false;
 
         player = new Kite(screenPixelSize, Color.WHITE, 0, "player", immuneTime);
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime);
@@ -101,6 +99,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         clearScreen();
         while(player.isAlive()) {
             try{
+                if(isCookie) cookieMinigame.repaint();
                 if(currentGame == 1 && !isWait) currentMinigame.repaint();
                 else repaint();
                 if(updateXP>0) player.gainXP(updateXP, currentGame, 255);
@@ -128,10 +127,13 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         runGame(0F);
         currentGame = nextGame;
         if(currentGame!=0) currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
-        else cookieMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+        else if(!isCookie) {
+            isCookie = true;
+            cookieMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+        }
         if(currentGame==1) kiteSimon();
         player.resurrect();
-        currentMinigame.dispose();
+        if(currentGame != 0) currentMinigame.dispose();
         kiteHome();
     }
     public void kiteSimon() {
@@ -154,7 +156,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentScreen = screen;
         currentScreenType = screenType;
         if(isStart) {
-            //super.paint(g);
+            super.paint(g);
             System.out.println("start");
         }
         Graphics2D g2 = (Graphics2D) g;

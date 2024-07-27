@@ -18,21 +18,21 @@ public class MyGraphics {
             } else {
                 if(!Main.isWait && Main.currentGame == 1) {
                     if(Main.simonCounter < Main.simonOrder.length) {
-                        if (Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.screenType[x][y])) {
+                        if (Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {
                             if (!Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].isImmune()) {
                                 Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].loseLife();
                                 Main.simonCounter++;
                             }
 
-                            Main.currentMinigame.screenType[x][y] = type;
+                            Main.currentMinigame.setScreenType(x, y, type);
                             return false;
                         }
                     }
                 } else if(Main.currentGame == 4) {
                     Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
                 }
-                if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter-1]].isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.currentMinigame.screenType[x][y])) {
-                    Main.currentMinigame.screenType[x][y] = type;
+                if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter-1]].isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {
+                    Main.currentMinigame.setScreenType(x, y, type);
                     return false;
                 }
                 Main.currentScreenType[x][y] = type;
@@ -87,16 +87,16 @@ public class MyGraphics {
         return collision;
     }
 
-    public void drawFile(String fileName, int x, int y, String type, boolean isOutlineColor) {
-        File myFile = new File(fileName);
-        try {
-            Scanner fileReader = new Scanner(myFile);
-            for(int i=0; i < fileReader.nextInt(); i++) {
-                if(isOutlineColor) colorIn(x+fileReader.nextInt(), y+fileReader.nextInt(), this.outlineColor, type);
-                else colorIn(x+fileReader.nextInt(), y+fileReader.nextInt(), new Color(fileReader.nextInt(), fileReader.nextInt(), fileReader.nextInt()), type);
-            }
-        } catch(IOException e) {
-            System.out.println("File not found");
-        }
-    }
+//    public void drawFile(String fileName, int x, int y, String type, boolean isOutlineColor) {
+//        File myFile = new File(fileName);
+//        try {
+//            Scanner fileReader = new Scanner(myFile);
+//            for(int i=0; i < fileReader.nextInt(); i++) {
+//                if(isOutlineColor) colorIn(x+fileReader.nextInt(), y+fileReader.nextInt(), this.outlineColor, type);
+//                else colorIn(x+fileReader.nextInt(), y+fileReader.nextInt(), new Color(fileReader.nextInt(), fileReader.nextInt(), fileReader.nextInt()), type);
+//            }
+//        } catch(IOException e) {
+//            System.out.println("File not found");
+//        }
+//    }
 }

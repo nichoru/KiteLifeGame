@@ -14,24 +14,20 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private int mouseY;
     private int xOffset = 8;
     private int yOffset = 31;
-    private static int screenPixelSize = 150;
+    private int screenPixelSize = 150;
     private MyGraphics mg = new MyGraphics(Color.BLACK);
     private Kite player;
-    public static int game;
-    public static int nextGame;
+    private int game;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 35;
-    public static int simonTimer;
-    public static int[] simonOrder;
-    public static int simonCounter;
+    private int immuneTime = 35;
     private Needle xNeedle;
     private Needle yNeedle;
     private Cloud cloud1;
     private Cloud cloud2;
     private Cloud cloud3;
-    public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
-    public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
+    private Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
+    private String[][] screenType = new String[screenPixelSize][screenPixelSize];
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
     private int cookieSegment;
@@ -125,6 +121,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         clearScreen();
         while(this.player.isAlive()) {
             try{
+                if(Main.isCookie && this.game != 0) Main.cookieMinigame.repaint();
                 repaint();
                 if(updateXP>0) Main.player.gainXP(updateXP, this.game, 255);
                 Thread.sleep(UPDATE_SPEED);
@@ -132,7 +129,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                 System.out.println(e);
             }
         }
-        if(game != 4) {
+        if(this.game != 4) {
             Main.player.changeColor(new Color(255-((255-buttonColors[game].getRed())*Main.player.getXP(this.game))/255, 255-((255-buttonColors[game].getGreen())*Main.player.getXP(this.game))/255, 255-((255-buttonColors[game].getBlue())*Main.player.getXP(this.game))/255), this.game);
             System.out.println(Main.player.getXP(this.game));
         }
@@ -152,10 +149,10 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.cookieSegment = buttons.length-1;
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
 
-        runGame(0F);
+        //runGame(0F);
     }
     public void kiteNeedle() {
-        game = 2;
+        this.game = 2;
         xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
         yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
 
@@ -164,7 +161,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         //kiteHome();
     }
     public void kiteClassic() {
-        game = 3;
+        this.game = 3;
         cloud1 = new Cloud(screenPixelSize);
         cloud2 = new Cloud(screenPixelSize);
         cloud3 = new Cloud(screenPixelSize);
@@ -191,24 +188,33 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         //kiteHome();
     }
 
+    public String getScreenType(int x, int y) {
+        return this.screenType[x][y];
+    }
+
+    public void setScreenType(int x, int y, String type) {
+        this.screenType[x][y] = type;
+    }
+
     @Override
     public void paint(Graphics g) {
         Main.currentScreen = this.screen;
         Main.currentScreenType = this.screenType;
-        if(isStart) {
-            //super.paint(g);
+
+        if(this.isStart) {
+            super.paint(g);
             System.out.println("start");
         }
         Graphics2D g2 = (Graphics2D) g;
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
-                screen[1][i][j] = Color.WHITE;
-                screenType[i][j] = "background";
+                this.screen[1][i][j] = Color.WHITE;
+                this.screenType[i][j] = "background";
             }
         }
 
-        switch(Main.currentGame) {
+        switch(this.game) {
             case 0:
                 this.player.makeImmune(1);
 
@@ -276,17 +282,17 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                 showButtons();
         }
 
-        if(player != null) player.show(mg, mouseX, mouseY);
+        if(this.player != null) this.player.show(mg, mouseX, mouseY);
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
-                if(screen[0][i][j] != screen[1][i][j] || isStart) {
-                    g2.setColor(screen[1][i][j]);
+                if(this.screen[0][i][j] != this.screen[1][i][j] || isStart) {
+                    g2.setColor(this.screen[1][i][j]);
                     g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
-                    screen[0][i][j] = screen[1][i][j];
+                    this.screen[0][i][j] = this.screen[1][i][j];
                 }
             }
         }
-        if(isStart) isStart = false;
+        if(this.isStart) this.isStart = false;
     }
 }
