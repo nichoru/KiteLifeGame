@@ -35,6 +35,10 @@ public class MyGraphics {
                     return false;
                 } else if(Main.isInstructions) {
                     if(!Main.startKite.isImmune()) Main.startKite.loseLife();
+                    if(Main.currentGame == 4) if(!Main.buttons[Integer.parseInt(Main.screenType[x][y])].isImmune()) {
+                        Main.buttons[Integer.parseInt(Main.screenType[x][y])].loseLife();
+                        Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
+                    }
                     Main.currentScreenType[x][y] = type;
                     return false;
                 } else if(!Main.isWait && Main.currentGame == 1) {
@@ -49,8 +53,6 @@ public class MyGraphics {
                             return false;
                         }
                     }
-                } else if(Main.currentGame == 4) {
-                    Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
                 }
                 if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.currentMinigame.getButton(Main.simonOrder[Main.simonCounter-1]).isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {
                     Main.currentMinigame.setScreenType(x, y, type);

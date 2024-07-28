@@ -118,6 +118,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 }
                 if(currentGame == 1 && !isWait) currentMinigame.repaint();
                 else repaint();
+                if(currentGame == 4) {
+                    for(int i = 0; i < buttons.length; i++) {
+                        if(!buttons[i].isAlive() && player.getXP(i) != 255) player.kill();
+                    }
+                }
                 if(updateXP>0) player.gainXP(updateXP, currentGame, 255);
                 Thread.sleep(UPDATE_SPEED);
             } catch(InterruptedException e) {
@@ -140,9 +145,12 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
     public void kiteHome() {
         currentGame = 4;
+        for(int i = 0; i < buttons.length; i++) {
+            buttons[i].setLives(4-(player.getXP(i)/63));
+        }
+        isInstructions = true;
         runGame(0F);
         currentGame = nextGame;
-        isInstructions = true;
         clearScreen();
         repaint();
         if(currentGame!=0) currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
@@ -188,6 +196,11 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     screenType[i][j] = "background";
                 }
             }
+            if(currentGame == 4) {
+                showButtons();
+                player.show(mg, mouseX, mouseY);
+            }
+
         } else {
             for (int i = 0; i < screenPixelSize; i++) {
                 for (int j = 0; j < screenPixelSize; j++) {
@@ -221,12 +234,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     showButtons();
                     //if(simonTimer/immuneTime==simonOrder.length) isWait = false;
                     break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    showButtons();
             }
 
             if (currentGame != 1) player.show(mg, mouseX, mouseY);
@@ -245,7 +252,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         if(isInstructions) {
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("Arial", Font.PLAIN, windowWidth/20));
-            System.out.println(windowWidth);
             switch(currentGame) {
                 case 0:
                     instructionsArray = new String[] {"Welcome to Kite Clicker!","Click to gain more colour","When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite","The aim is to have a fully yellow kite"};
@@ -260,18 +266,20 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     instructionsArray = new String[] {"Welcome to Kite Flying 101!", "Dodge the clouds and try to stay alive", "The clouds will get faster and faster"};
                     break;
                 case 4:
-//                    g2.drawString("Welcome to Kite Life!", windowWidth/2-100, windowHeight/2-50);
-//                    g2.drawString("Click on the kite to start the game", windowWidth/2-150, windowHeight/2);
-//                    g2.drawString("Use the mouse to move the kite", windowWidth/2-150, windowHeight/2+50);
-//                    g2.drawString("Avoid the obstacles and stay alive", windowWidth/2-150, windowHeight/2+100);
-//                    g2.drawString("Good luck!", windowWidth/2-50, windowHeight/2+150);
+                    instructionsArray = new String[] {"Welcome to Kite Life!", "Hover over the kites to start each", "minigame (they will disappear ", "as you gain xp)", "", "The aim is to have a fully coloured kite"};
+                    for(int i = 0; i < instructionsArray.length; i++) {
+                        g2.drawString(instructionsArray[i], windowWidth/20+xOffset, (2*i+7)*windowWidth/20+yOffset);
+                    }
+                    instructionsArray = new String[] {""};
             }
 
             for(int i = 0; i < instructionsArray.length; i++) {
                 g2.drawString(instructionsArray[i], windowWidth/10+xOffset, (i+1)*windowWidth/10+yOffset);
             }
-            g2.drawString("Kill the other kite on the small screen", windowWidth/10+xOffset, (instructionsArray.length+2)*windowWidth/10+yOffset);
-            g2.drawString("by hovering over it to start", windowWidth/10+xOffset, (instructionsArray.length+3)*windowWidth/10+yOffset);
+            if(currentGame != 4) {
+                g2.drawString("Kill the other kite on the small screen", windowWidth / 10 + xOffset, (instructionsArray.length + 2) * windowWidth / 10 + yOffset);
+                g2.drawString("by hovering over it to start", windowWidth / 10 + xOffset, (instructionsArray.length + 3) * windowWidth / 10 + yOffset);
+            }
         }
         if(isStart) isStart = false;
     }

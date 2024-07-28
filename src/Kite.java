@@ -51,12 +51,16 @@ public class Kite {
     public void loseLife() { // what happens when the kite loses a life
         if(this.lives > 0) {
             this.lives--;
+            System.out.println("hi");
             this.immunity = this.maxImmunity;
         }
     }
 
     public int getLives() {
         return this.lives;
+    }
+    public void setLives(int l) {
+        this.lives = l;
     }
 
     public void kill() {this.lives = 0;}
@@ -75,6 +79,7 @@ public class Kite {
     }
 
     public void resurrect() {
+        this.immunity = 0;
         this.lives = 4;
     }
 
