@@ -25,6 +25,10 @@ public class MyGraphics {
                     }
                     Main.cookieMinigame.setScreenType(x, y, type);
                     return false;
+                } else if(Main.isInstructions) {
+                    if(!Main.startKite.isImmune()) Main.startKite.loseLife();
+                    Main.currentScreenType[x][y] = type;
+                    return false;
                 } else if(!Main.isWait && Main.currentGame == 1) {
                     if(Main.simonCounter < Main.simonOrder.length) {
                         if (Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {

@@ -17,6 +17,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private int screenPixelSize = 150;
     private MyGraphics mg = new MyGraphics(Color.BLACK);
     private Kite player;
+    private Kite startKite;
     private int game;
     private Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -65,7 +66,16 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
         if(game != 0) this.player = Main.player;
         else this.player = new Kite(screenPixelSize, Color.WHITE, 0, "player", immuneTime);
-        switch(game) {
+        this.game = game;
+
+        this.startKite = Main.startKite;
+        while(this.startKite.isAlive()) {
+            this.repaint();
+        }
+        Main.isInstructions = false;
+        Main.startKite.resurrect();
+
+        switch(this.game) {
             case 0:
                 this.kiteCookie();
                 break;
@@ -172,6 +182,10 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         return this.player;
     }
 
+    public Kite getStartKite() {
+        return this.startKite;
+    }
+
     public Kite getButton(int i) {
         return this.buttons[i];
     }
@@ -247,81 +261,92 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         }
         Graphics2D g2 = (Graphics2D) g;
 
-        for(int i = 0; i < screenPixelSize; i++) {
-            for(int j = 0; j < screenPixelSize; j++) {
-                this.screen[1][i][j] = Color.WHITE;
-                this.screenType[i][j] = "background";
+        if(this.startKite.isAlive()) {
+            for(int i = 0; i < screenPixelSize; i++) {
+                for(int j = 0; j < screenPixelSize; j++) {
+                    this.screen[1][i][j] = Color.BLACK;
+                    this.screenType[i][j] = "background";
+                }
+            }
+            this.startKite.show(mg, screenPixelSize/2, screenPixelSize/2);
+        } else {
+
+            for (int i = 0; i < screenPixelSize; i++) {
+                for (int j = 0; j < screenPixelSize; j++) {
+                    this.screen[1][i][j] = Color.WHITE;
+                    this.screenType[i][j] = "background";
+                }
+            }
+
+            switch (this.game) {
+                case 0:
+                    this.player.makeImmune(1);
+
+                    if (this.player.getXP(this.cookieSegment) - 255 * (3 - this.cookieClick) > 0 && this.player.getXP(this.cookieSegment) % 255 == 0) {
+                        if (this.cookieSegment > 0) {
+                            this.cookieSegment--;
+                        } else if (this.cookieClick > this.cookieMaxClick) {
+                            this.cookieSegment = 3;
+                            this.cookieClick--;
+                        }
+                    }
+
+                    if ((this.cookieClick >= this.cookieMaxTop && this.cookieSegment > 1) || (this.cookieClick >= this.cookieMaxBottom && this.cookieSegment < 2)) {
+                        this.player.gainXP(this.cookieAutoPower[this.cookieSegment], this.cookieSegment, 255 * (4 - this.cookieClick));
+                        cookieChangeColor();
+                    }
+
+                    if (this.cookieClick == 0 && this.cookieSegment == 0 && this.player.getXP(this.cookieSegment) == 255 * buttons.length) {
+                        Main.player.gainXP(255, this.game, 255);
+                        this.player.kill();
+                    }
+
+                    showButtons();
+                    break;
+                case 1:
+                    if (!Main.isWait) {
+                        if (Main.simonCounter < Main.simonOrder.length) {
+                            if (Main.simonOrder[Main.simonCounter] == 4) {
+                                Main.simonTimer = 1 - Main.immuneTime;
+                                Main.player.gainXP(Main.simonCounter * 2, this.game, 255);
+                                if (Main.simonOrder[Main.simonOrder.length - 1] != 4) Main.player.kill();
+                                Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
+                                while (!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive())
+                                    Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
+                                for (int i = 0; i < this.buttons.length; i++) {
+                                    this.buttons[i].resurrect();
+                                    Main.buttons[i].resurrect();
+                                }
+                                Main.isWait = true;
+                            }
+                            showButtons();
+                        } else {
+                            Main.isWait = true;
+                            Main.player.gainXP(Main.simonCounter * 2, this.game, 255);
+                            Main.player.kill();
+                        }
+                    }
+                    break;
+                case 2:
+                    xNeedle.move(player.getHeight());
+                    xNeedle.show(mg);
+                    yNeedle.move(player.getWidth());
+                    yNeedle.show(mg);
+                    break;
+                case 3:
+                    cloud1.move();
+                    cloud1.show(mg);
+                    cloud2.move();
+                    cloud2.show(mg);
+                    cloud3.move();
+                    cloud3.show(mg);
+                    break;
+                case 4:
+                    showButtons();
             }
         }
 
-        switch(this.game) {
-            case 0:
-                this.player.makeImmune(1);
-
-                if(this.player.getXP(this.cookieSegment)-255*(3-this.cookieClick) > 0 && this.player.getXP(this.cookieSegment)%255 == 0) {
-                    if(this.cookieSegment > 0) {
-                        this.cookieSegment--;
-                    } else if(this.cookieClick > this.cookieMaxClick) {
-                        this.cookieSegment = 3;
-                        this.cookieClick--;
-                    }
-                }
-
-                if((this.cookieClick >= this.cookieMaxTop && this.cookieSegment > 1) || (this.cookieClick >= this.cookieMaxBottom && this.cookieSegment < 2)) {
-                    this.player.gainXP(this.cookieAutoPower[this.cookieSegment], this.cookieSegment, 255*(4-this.cookieClick));
-                    cookieChangeColor();
-                }
-
-                if(this.cookieClick == 0 && this.cookieSegment == 0 && this.player.getXP(this.cookieSegment) == 255*buttons.length) {
-                    Main.player.gainXP(255, this.game, 255);
-                    this.player.kill();
-                }
-
-                showButtons();
-                break;
-            case 1:
-                if(!Main.isWait) {
-                    if (Main.simonCounter < Main.simonOrder.length) {
-                        if (Main.simonOrder[Main.simonCounter] == 4) {
-                            Main.simonTimer = 1 - Main.immuneTime;
-                            Main.player.gainXP(Main.simonCounter * 2, this.game, 255);
-                            if (Main.simonOrder[Main.simonOrder.length - 1] != 4) Main.player.kill();
-                            Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
-                            while (!Main.buttons[Main.simonOrder[Main.simonCounter]].isAlive())
-                                Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
-                            for (int i = 0; i < this.buttons.length; i++) {
-                                this.buttons[i].resurrect();
-                                Main.buttons[i].resurrect();
-                            }
-                            Main.isWait = true;
-                        }
-                        showButtons();
-                    } else {
-                        Main.isWait = true;
-                        Main.player.gainXP(Main.simonCounter * 2, this.game, 255);
-                        Main.player.kill();
-                    }
-                }
-                break;
-            case 2:
-                xNeedle.move(player.getHeight());
-                xNeedle.show(mg);
-                yNeedle.move(player.getWidth());
-                yNeedle.show(mg);
-                break;
-            case 3:
-                cloud1.move();
-                cloud1.show(mg);
-                cloud2.move();
-                cloud2.show(mg);
-                cloud3.move();
-                cloud3.show(mg);
-                break;
-            case 4:
-                showButtons();
-        }
-
-        if(this.player != null) this.player.show(mg, mouseX, mouseY);
+        this.player.show(mg, mouseX, mouseY);
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
