@@ -101,7 +101,16 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         clearScreen();
         while(player.isAlive()) {
             try{
-                if(isCookie) cookieMinigame.repaint();
+                if(isCookie) {
+                    cookieMinigame.repaint();
+                    if(!cookieMinigame.getPlayer().isAlive()) {
+                        player.changeColor(buttonColors[0], 0);
+                        System.out.println(player.getXP(0));
+                        cookieMinigame.dispose();
+                        isCookie = false;
+                        isInCookie = false;
+                    }
+                }
                 if(currentGame == 1 && !isWait) currentMinigame.repaint();
                 else repaint();
                 if(updateXP>0) player.gainXP(updateXP, currentGame, 255);
@@ -203,7 +212,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 showButtons();
         }
 
-        if(player != null) player.show(mg, mouseX, mouseY);
+        if(currentGame != 1) player.show(mg, mouseX, mouseY);
 
         for(int i = 0; i < screenPixelSize; i++) {
             for(int j = 0; j < screenPixelSize; j++) {
