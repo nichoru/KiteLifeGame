@@ -16,11 +16,20 @@ public class MyGraphics {
             if(Main.currentScreenType[x][y].equals(type) || Main.currentScreenType[x][y].equals("background")) {
                 Main.currentScreenType[x][y] = type;
             } else {
-                if(!Main.isWait && Main.currentGame == 1) {
+                if(Main.isInCookie) {
+                    if(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() > 0){
+                        if (Main.cookieMinigame.getPlayer().getXP(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() - 1) >= 255 * (4 - Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))) && !Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).isImmune()) {
+                            Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).loseLife();
+                            Main.cookieMinigame.cookiePay(255 * (4 - Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives()));
+                        }
+                    }
+                    Main.cookieMinigame.setScreenType(x, y, type);
+                    return false;
+                } else if(!Main.isWait && Main.currentGame == 1) {
                     if(Main.simonCounter < Main.simonOrder.length) {
                         if (Main.simonOrder[Main.simonCounter] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {
-                            if (!Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].isImmune()) {
-                                Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter]].loseLife();
+                            if (!Main.currentMinigame.getButton(Main.simonOrder[Main.simonCounter]).isImmune()) {
+                                Main.currentMinigame.getButton(Main.simonOrder[Main.simonCounter]).loseLife();
                                 Main.simonCounter++;
                             }
 
@@ -31,7 +40,7 @@ public class MyGraphics {
                 } else if(Main.currentGame == 4) {
                     Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
                 }
-                if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.currentMinigame.buttons[Main.simonOrder[Main.simonCounter-1]].isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {
+                if(Main.simonCounter > 0 && Main.simonCounter < Main.simonOrder.length) if(Main.currentMinigame.getButton(Main.simonOrder[Main.simonCounter-1]).isImmune() && Main.simonOrder[Main.simonCounter-1] == Integer.parseInt(Main.currentMinigame.getScreenType(x, y))) {
                     Main.currentMinigame.setScreenType(x, y, type);
                     return false;
                 }

@@ -21,6 +21,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static Minigame currentMinigame;
     public static Minigame cookieMinigame;
     public static boolean isCookie;
+    public static boolean isInCookie;
     public static int nextGame;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
@@ -61,6 +62,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         this.setVisible(true);
 
         isCookie = false;
+        isInCookie = false;
 
         player = new Kite(screenPixelSize, Color.WHITE, 0, "player", immuneTime);
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime);

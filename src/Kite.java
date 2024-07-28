@@ -55,11 +55,8 @@ public class Kite {
         }
     }
 
-    public void gainLife() {
-        if(this.lives < 4) {
-            this.lives++;
-            this.immunity = this.maxImmunity;
-        }
+    public int getLives() {
+        return this.lives;
     }
 
     public void kill() {this.lives = 0;}
@@ -88,6 +85,10 @@ public class Kite {
     public void gainXP(float amountXP, int segment, int maxXP) {
         this.xp[segment] += amountXP;
         if(this.xp[segment]>maxXP) this.xp[segment] = maxXP;
+    }
+
+    public void loseXP(float amountXP, int segment) {
+        this.xp[segment] -= amountXP;
     }
 
     public int getXP(int segment) {
