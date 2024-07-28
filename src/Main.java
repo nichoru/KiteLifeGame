@@ -25,6 +25,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static boolean isInCookie;
     public static int nextGame;
     public static boolean isInstructions;
+    private String[] instructionsArray;
     public static Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
     public static int immuneTime = 50;
@@ -151,6 +152,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         }
         if(currentGame==1) kiteSimon();
         player.resurrect();
+        startKite.resurrect();
         if(currentGame != 0) currentMinigame.dispose();
         kiteHome();
     }
@@ -242,40 +244,34 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         if(isInstructions) {
             g2.setColor(Color.WHITE);
-            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+            g2.setFont(new Font("Arial", Font.PLAIN, windowWidth/20));
             System.out.println(windowWidth);
             switch(currentGame) {
                 case 0:
-                    g2.drawString("Welcome to Kite Clicker!", windowWidth/2-100, windowHeight/2-50);
-                    g2.drawString("Click to gain more colour", windowWidth/2-150, windowHeight/2);
-                    g2.drawString("When you have enough full segments of a colour", windowWidth/2-150, windowHeight/2+50);
-                    g2.drawString("you can buy upgrades by hovering over that colour kite", windowWidth/2-150, windowHeight/2+100);
-                    g2.drawString("The aim is to have a fully yellow kite", windowWidth/2-50, windowHeight/2+150);
+                    instructionsArray = new String[] {"Welcome to Kite Clicker!","Click to gain more colour","When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite","The aim is to have a fully yellow kite"};
                     break;
                 case 1:
-                    g2.drawString("Welcome to Kite Says!", windowWidth/2-100, windowHeight/2-50);
-                    g2.drawString("Watch the buttons light up on the main screen", windowWidth/2-150, windowHeight/2);
-                    g2.drawString("Afterwards, hover over them on the small screen", windowWidth/2-150, windowHeight/2+50);
-                    g2.drawString("in the same order", windowWidth/2-50, windowHeight/2+100);
+                    instructionsArray = new String[] {"Welcome to Kite Says!", "Watch the buttons light up", "on the main screen", "Afterwards, hover over them on the", "small screen in the same order"};
                     break;
                 case 2:
-                    g2.drawString("Welcome to Kite the Needle!", windowWidth/2-100, windowHeight/2-50);
-                    g2.drawString("Thread the needle by avoiding the obstacles", windowWidth/2-150, windowHeight/2);
-                    g2.drawString("for as long as you can", windowWidth/2-150, windowHeight/2+50);
-                    g2.drawString("The gaps will get smaller and smaller", windowWidth/2-150, windowHeight/2+100);
+                    instructionsArray = new String[] {"Welcome to Kite the Needle!", "Thread the needle by avoiding", "the obstacles for as long as you can", "The gaps will get smaller and smaller"};
                     break;
                 case 3:
-                    g2.drawString("Welcome to Kite Flying 101!", windowWidth/2-100, windowHeight/2-50);
-                    g2.drawString("Dodge the clouds and try to stay alive", windowWidth/2-150, windowHeight/2);
-                    g2.drawString("The clouds will get faster and faster", windowWidth/2-150, windowHeight/2+50);
+                    instructionsArray = new String[] {"Welcome to Kite Flying 101!", "Dodge the clouds and try to stay alive", "The clouds will get faster and faster"};
                     break;
                 case 4:
-                    g2.drawString("Welcome to Kite Life!", windowWidth/2-100, windowHeight/2-50);
-                    g2.drawString("Click on the kite to start the game", windowWidth/2-150, windowHeight/2);
-                    g2.drawString("Use the mouse to move the kite", windowWidth/2-150, windowHeight/2+50);
-                    g2.drawString("Avoid the obstacles and stay alive", windowWidth/2-150, windowHeight/2+100);
-                    g2.drawString("Good luck!", windowWidth/2-50, windowHeight/2+150);
+//                    g2.drawString("Welcome to Kite Life!", windowWidth/2-100, windowHeight/2-50);
+//                    g2.drawString("Click on the kite to start the game", windowWidth/2-150, windowHeight/2);
+//                    g2.drawString("Use the mouse to move the kite", windowWidth/2-150, windowHeight/2+50);
+//                    g2.drawString("Avoid the obstacles and stay alive", windowWidth/2-150, windowHeight/2+100);
+//                    g2.drawString("Good luck!", windowWidth/2-50, windowHeight/2+150);
             }
+
+            for(int i = 0; i < instructionsArray.length; i++) {
+                g2.drawString(instructionsArray[i], windowWidth/10+xOffset, (i+1)*windowWidth/10+yOffset);
+            }
+            g2.drawString("Kill the other kite on the small screen", windowWidth/10+xOffset, (instructionsArray.length+2)*windowWidth/10+yOffset);
+            g2.drawString("by hovering over it to start", windowWidth/10+xOffset, (instructionsArray.length+3)*windowWidth/10+yOffset);
         }
         if(isStart) isStart = false;
     }

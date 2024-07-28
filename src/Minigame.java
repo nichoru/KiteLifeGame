@@ -69,11 +69,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.game = game;
 
         this.startKite = Main.startKite;
-        while(this.startKite.isAlive()) {
-            this.repaint();
-        }
+        runGame(0F, this.startKite);
         Main.isInstructions = false;
-        Main.startKite.resurrect();
 
         switch(this.game) {
             case 0:
@@ -123,9 +120,9 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         }
         System.out.println("cleared");
     }
-    public void runGame(float updateXP) {
+    public void runGame(float updateXP, Kite kite) {
         clearScreen();
-        while(this.player.isAlive()) {
+        while(kite.isAlive()) {
             try{
                 if(Main.isCookie && this.game != 0) Main.cookieMinigame.repaint();
                 repaint();
@@ -162,7 +159,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
         yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
 
-        runGame(0.03F);
+        runGame(0.03F, this.player);
     }
     public void kiteClassic() {
         this.game = 3;
@@ -170,7 +167,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         cloud2 = new Cloud(screenPixelSize);
         cloud3 = new Cloud(screenPixelSize);
 
-        runGame(0.03F);
+        runGame(0.03F, this.player);
     }
     public void kiteSimon() {
         this.game = 1;
@@ -261,7 +258,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         }
         Graphics2D g2 = (Graphics2D) g;
 
-        if(this.startKite.isAlive()) {
+        if(Main.isInstructions && Main.currentGame == this.game) {
             for(int i = 0; i < screenPixelSize; i++) {
                 for(int j = 0; j < screenPixelSize; j++) {
                     this.screen[1][i][j] = Color.BLACK;

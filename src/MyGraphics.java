@@ -16,7 +16,15 @@ public class MyGraphics {
             if(Main.currentScreenType[x][y].equals(type) || Main.currentScreenType[x][y].equals("background")) {
                 Main.currentScreenType[x][y] = type;
             } else {
-                if(Main.isInCookie) {
+                if(Main.currentScreenType[x][y].equals("obstacle")) {
+                    Main.currentScreenType[x][y] = type;
+                    return true;
+                } else if(Main.isInCookie) {
+                    if(Main.isInstructions && Main.currentGame == 0) {
+                        if(!Main.startKite.isImmune()) Main.startKite.loseLife();
+                        Main.currentScreenType[x][y] = type;
+                        return false;
+                    }
                     if(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() > 0){
                         if (Main.cookieMinigame.getPlayer().getXP(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() - 1) >= 255 * (4 - Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))) && !Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).isImmune()) {
                             Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).loseLife();
