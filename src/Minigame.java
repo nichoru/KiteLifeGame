@@ -21,6 +21,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private int game;
     private Kite[] buttons = new Kite[4];
     private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
+    private String[] buttonNames = {"yellow", "magenta", "cyan", "red"};
     private int immuneTime = 35;
     private Needle xNeedle;
     private Needle yNeedle;
@@ -38,6 +39,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private int cookieMaxClick;
     private int cookieMaxTop;
     private int cookieMaxBottom;
+    private String[] describeArray;
 
     public Minigame(int game, int windowWidth, int windowHeight) {
         setTitle(title);
@@ -351,6 +353,29 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                     g2.setColor(this.screen[1][i][j]);
                     g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
                     this.screen[0][i][j] = this.screen[1][i][j];
+                }
+            }
+        }
+
+        if(this.game == 0 && !(Main.isInstructions && Main.currentGame == 0)) {
+            g2.setColor(Color.BLACK);
+            g2.setFont(new Font("Arial", Font.PLAIN, windowWidth/20));
+            for(int i = 0; i < this.buttons.length; i++) {
+                if(this.buttons[i].isAlive()) g2.drawString("Price: "+(5-this.buttons[i].getLives())+" "+this.buttonNames[i], windowWidth/10+(i%2)*windowWidth/2+xOffset, 2*windowHeight/3-(i/2)*windowHeight/2+yOffset);
+                switch(this.buttons[i].getLives()) {
+                    case 0:
+                        this.describeArray = new String[] {""};
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        this.describeArray = new String[] {"Buy for the upper two", "segments to slowly", "turn "+buttonNames[i]};
+                }
+                for(int j = 0; j < this.describeArray.length; j++) {
+                    g2.drawString(this.describeArray[j], (i%2)*windowWidth/2+xOffset, 5*windowHeight/6+(j+1)*windowHeight/20-(i/2)*windowHeight/2+yOffset);
                 }
             }
         }
