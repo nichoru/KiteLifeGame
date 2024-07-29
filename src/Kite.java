@@ -38,12 +38,12 @@ public class Kite {
         if(this.y < this.height && this.lives >= 3) this.y = this.height;
         if(this.y > this.screenSize - this.height) this.y = this.screenSize - this.height;
 
-        if(this.immunity > 0 && !this.type.equals("player") && this.isAlive()) g.makeColoredCircle(this.x, this.y, this.height*3/2, new Color(255-((255-this.fillColor[this.lives-1].getRed())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[this.lives-1].getGreen())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[this.lives-1].getBlue())*(255*this.immunity/this.maxImmunity))/255), "background");
+        if(this.immunity > 0 && !this.type.equals("player")) g.makeColoredCircle(this.x, this.y, this.height*3/2, new Color(255-((255-this.fillColor[0].getRed())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[0].getGreen())*(255*this.immunity/this.maxImmunity))/255, 255-((255-this.fillColor[0].getBlue())*(255*this.immunity/this.maxImmunity))/255), "background");
         // draws the kite based on how many lives are left, and if it's drawn on top of an obstacle, collision is set to true
         if(this.lives == 4) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, -1, this.fillColor[3], this.outlineColor, this.type)) collision = true;
         if(this.lives >= 3) if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, -1, this.fillColor[2], this.outlineColor, this.type)) collision = true;
         if(this.lives >= 2) if(g.makeRATriangle(this.x, this.y, this.width, this.height, 1, 1, this.fillColor[1], this.outlineColor,  this.type)) collision = true;
-        if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, this.fillColor[0], this.outlineColor, this.type)) collision = true;
+        if(this.lives >= 1) if(g.makeRATriangle(this.x, this.y, this.width, this.height, -1, 1, this.fillColor[0], this.outlineColor, this.type)) collision = true;
         if(this.immunity > 0) this.immunity--; // if the kite recently lost a life (or has immunity for any other reason), decrease the timer on this
         else if(collision) this.loseLife(); // if the kite doesn't have immunity and is on top of an obstacle, lose a life
     }
@@ -79,7 +79,7 @@ public class Kite {
     }
 
     public void resurrect() {
-        this.immunity = 0;
+        this.immunity = this.maxImmunity;
         this.lives = 4;
     }
 

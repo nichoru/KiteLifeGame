@@ -139,7 +139,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     }
     public void showButtons() {
         for(int i = 0; i < buttons.length; i++) {
-            if(buttons[i].isAlive()) buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
+            buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
         }
     }
 

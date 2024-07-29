@@ -115,6 +115,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                         cookieMinigame.dispose();
                         isCookie = false;
                         isInCookie = false;
+                        isWin = true;
+                        for(int i = 0; i < buttons.length; i++) if(player.getXP(i) < 255) isWin = false;
+                        if(isWin) kiteHome();
                     }
                 }
                 if(currentGame == 1 && !isWait) currentMinigame.repaint();
@@ -140,7 +143,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     }
     public void showButtons() {
         for(int i = 0; i < buttons.length; i++) {
-            if(buttons[i].isAlive()) buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
+            buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
         }
     }
 
@@ -149,6 +152,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         isWin = true;
         for(int i = 0; i < buttons.length; i++) {
             buttons[i].setLives(4-(player.getXP(i)/63));
+            if(!buttons[i].isAlive() && player.getXP(i) != 255) buttons[i].setLives(1);
             if(buttons[i].isAlive()) isWin = false;
         }
         isInstructions = true;
