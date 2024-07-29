@@ -15,7 +15,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private int xOffset = 8;
     private int yOffset = 31;
     private int screenPixelSize = 150;
-    private MyGraphics mg = new MyGraphics(Color.BLACK);
+    private MyGraphics mg = new MyGraphics();
     private Kite player;
     private Kite startKite;
     private int game;

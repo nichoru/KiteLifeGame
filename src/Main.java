@@ -4,18 +4,14 @@ import java.awt.event.*;
 
 public class Main extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
 
-    private JPanel window = new JPanel();
-    private Canvas canvas = new Canvas();
-    private String title = "Kite Life";
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int windowWidth = screenSize.width/2;
-    private int windowHeight = screenSize.height/2;
+    private int windowSize;
     private int mouseX;
     private int mouseY;
-    private int xOffset = 8;
-    private int yOffset = 31;
-    private static int screenPixelSize = 150;
-    private MyGraphics mg = new MyGraphics(Color.BLACK);
+    private final int X_OFFSET = 8;
+    private final int Y_OFFSET = 31;
+    private static final int SCREEN_PIXEL_SIZE = 150;
+    private final MyGraphics M_G = new MyGraphics();
     public static Kite player;
     public static Kite startKite;
     public static int currentGame;
@@ -28,15 +24,15 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static boolean isInstructions;
     private String[] instructionsArray;
     public static Kite[] buttons = new Kite[4];
-    private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
+    private final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
     public static int immuneTime = 50;
     public static boolean isWait = true;
     public static int simonTimer;
     public static int[] simonOrder;
     public static int simonCounter;
-    public static Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
+    public static Color[][][] screen = new Color[2][SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
     public static Color[][][] currentScreen = screen;
-    public static String[][] screenType = new String[screenPixelSize][screenPixelSize];
+    public static String[][] screenType = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
     public static String[][] currentScreenType = screenType;
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
@@ -46,17 +42,20 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     } // makes a new Main object
 
     public Main() {
+        String title = "Kite Life";
         setTitle(title);
-        if(windowWidth < windowHeight) windowHeight = windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
-        else windowWidth = windowHeight;
-        getContentPane().setPreferredSize(new Dimension(windowWidth, windowHeight));
+        if(screenSize.width < screenSize.height) windowSize = screenSize.width/2; // makes the window a square that's based on the smaller out of the user's screen height and width
+        else windowSize = screenSize.height/2;
+        getContentPane().setPreferredSize(new Dimension(windowSize, windowSize));
         getContentPane().setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        window.setPreferredSize(new Dimension(windowWidth, windowHeight));
+        JPanel window = new JPanel();
+        window.setPreferredSize(new Dimension(windowSize, windowSize));
+        Canvas canvas = new Canvas();
         window.add(canvas);
 
-        setLocation((screenSize.width-windowWidth)/2, (screenSize.height-windowHeight)/2); // centres the window on the user's screen
+        setLocation((screenSize.width-windowSize)/2, (screenSize.height-windowSize)/2); // centres the window on the user's screen
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -69,9 +68,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         isInCookie = false;
         isInstructions = false;
 
-        player = new Kite(screenPixelSize, Color.WHITE, 0, "player", immuneTime);
-        startKite = new Kite(screenPixelSize, Color.WHITE, 0, "start", immuneTime);
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime);
+        player = new Kite(SCREEN_PIXEL_SIZE, Color.WHITE, 0, "player", immuneTime);
+        startKite = new Kite(SCREEN_PIXEL_SIZE, Color.WHITE, 0, "start", immuneTime);
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(SCREEN_PIXEL_SIZE, BUTTON_COLORS[i], 0, i+"", immuneTime);
         kiteHome();
     }
 
@@ -87,8 +86,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseMoved(MouseEvent e) {
-        mouseX = (e.getX() - xOffset)*screenPixelSize/windowWidth;
-        mouseY = (e.getY() - yOffset)*screenPixelSize/windowWidth;
+        mouseX = (e.getX() - X_OFFSET)*SCREEN_PIXEL_SIZE/windowSize;
+        mouseY = (e.getY() - Y_OFFSET)*SCREEN_PIXEL_SIZE/windowSize;
     }
     public void mouseDragged(MouseEvent e) {System.out.println("drag");}
     public void mouseClicked(MouseEvent e) {
@@ -96,8 +95,8 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     }
 
     public void clearScreen() {
-        for(int i = 0; i < screenPixelSize; i++) {
-            for(int j = 0; j < screenPixelSize; j++) {
+        for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+            for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                 screen[0][i][j] = null;
             }
         }
@@ -109,7 +108,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                 if(isCookie) {
                     cookieMinigame.repaint();
                     if(!cookieMinigame.getPlayer().isAlive()) {
-                        player.changeColor(buttonColors[0], 0);
+                        player.changeColor(BUTTON_COLORS[0], 0);
                         System.out.println(player.getXP(0));
                         cookieMinigame.dispose();
                         isCookie = false;
@@ -133,7 +132,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             }
         }
         if(currentGame != 4) {
-            player.changeColor(new Color(255-((255-buttonColors[currentGame].getRed())*player.getXP(currentGame))/255, 255-((255-buttonColors[currentGame].getGreen())*player.getXP(currentGame))/255, 255-((255-buttonColors[currentGame].getBlue())*player.getXP(currentGame))/255), currentGame);
+            player.changeColor(new Color(255-((255-BUTTON_COLORS[currentGame].getRed())*player.getXP(currentGame))/255, 255-((255-BUTTON_COLORS[currentGame].getGreen())*player.getXP(currentGame))/255, 255-((255-BUTTON_COLORS[currentGame].getBlue())*player.getXP(currentGame))/255), currentGame);
             System.out.println(currentGame);
             System.out.println(player.getXP(currentGame));
         }
@@ -145,7 +144,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             buttons[0].kill();
         }
         for(int i = 0; i < buttons.length; i++) {
-            buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
+            buttons[i].show(M_G, SCREEN_PIXEL_SIZE/4+(i%2)*SCREEN_PIXEL_SIZE/2, SCREEN_PIXEL_SIZE/4+((3-i)/2)*SCREEN_PIXEL_SIZE/2);
         }
     }
 
@@ -163,10 +162,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         clearScreen();
         repaint();
         startKite.resurrect();
-        if(currentGame!=0) currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+        if(currentGame!=0) currentMinigame = new Minigame(currentGame, windowSize, windowSize);
         else if(!isCookie) {
             isCookie = true;
-            cookieMinigame = new Minigame(currentGame, windowWidth, windowHeight);
+            cookieMinigame = new Minigame(currentGame, windowSize, windowSize);
         }
         if(currentGame==1) kiteSimon();
         player.resurrect();
@@ -200,20 +199,20 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         if(isInstructions) {
             clearScreen();
-            for (int i = 0; i < screenPixelSize; i++) {
-                for (int j = 0; j < screenPixelSize; j++) {
+            for (int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+                for (int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                     screen[1][i][j] = Color.BLACK;
                     screenType[i][j] = "background";
                 }
             }
             if(currentGame == 4) {
                 showButtons();
-                player.show(mg, mouseX, mouseY);
+                player.show(M_G, mouseX, mouseY);
             }
 
         } else {
-            for (int i = 0; i < screenPixelSize; i++) {
-                for (int j = 0; j < screenPixelSize; j++) {
+            for (int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+                for (int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                     screen[1][i][j] = Color.WHITE;
                     screenType[i][j] = "background";
                 }
@@ -246,14 +245,14 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     break;
             }
 
-            if (currentGame != 1) player.show(mg, mouseX, mouseY);
+            if (currentGame != 1) player.show(M_G, mouseX, mouseY);
         }
 
-        for(int i = 0; i < screenPixelSize; i++) {
-            for(int j = 0; j < screenPixelSize; j++) {
+        for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+            for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                 if(screen[0][i][j] != screen[1][i][j] || isStart) {
                     g2.setColor(screen[1][i][j]);
-                    g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
+                    g2.fillRect(i * windowSize / SCREEN_PIXEL_SIZE + X_OFFSET, j * windowSize / SCREEN_PIXEL_SIZE + Y_OFFSET, windowSize / SCREEN_PIXEL_SIZE + 1, windowSize / SCREEN_PIXEL_SIZE + 1);
                     screen[0][i][j] = screen[1][i][j];
                 }
             }
@@ -261,7 +260,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
         if(isInstructions) {
             g2.setColor(Color.WHITE);
-            g2.setFont(new Font("Arial", Font.PLAIN, windowWidth/20));
+            g2.setFont(new Font("Arial", Font.PLAIN, windowSize/20));
             switch(currentGame) {
                 case 0:
                     instructionsArray = new String[] {"Welcome to Kite Clicker!","Click to gain more colour","When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite","The aim is to have a fully yellow kite","YOU CAN PLAY OTHER GAMES STILL"};
@@ -279,22 +278,22 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     if(isWin) instructionsArray = new String[] {"Congratulations!", "You have won the game!"};
                     else instructionsArray = new String[] {"Welcome to Kite Life!", "Hover over the kites to start each", "minigame (they will disappear ", "as you gain xp)", "", "The aim is to have a fully coloured kite"};
                     for(int i = 0; i < instructionsArray.length; i++) {
-                        g2.drawString(instructionsArray[i], windowWidth/20+xOffset, (2*i+7)*windowWidth/20+yOffset);
+                        g2.drawString(instructionsArray[i], windowSize/20+X_OFFSET, (2*i+7)*windowSize/20+Y_OFFSET);
                     }
-                    if(isCookie) g2.drawString("Tip: you can play multiple games at once!", windowWidth/20+xOffset, (instructionsArray.length*2+7)*windowWidth/20+yOffset);
-                    else if(player.getXP(0) == 0) g2.drawString("Tip: start with yellow!", windowWidth/20+xOffset, (instructionsArray.length*2+7)*windowWidth/20+yOffset);
+                    if(isCookie) g2.drawString("Tip: you can play multiple games at once!", windowSize/20+X_OFFSET, (instructionsArray.length*2+7)*windowSize/20+Y_OFFSET);
+                    else if(player.getXP(0) == 0) g2.drawString("Tip: start with yellow!", windowSize/20+X_OFFSET, (instructionsArray.length*2+7)*windowSize/20+Y_OFFSET);
                     instructionsArray = new String[] {""};
                 }
 
             for(int i = 0; i < instructionsArray.length; i++) {
-                g2.drawString(instructionsArray[i], windowWidth/10+xOffset, (i+1)*windowWidth/10+yOffset);
+                g2.drawString(instructionsArray[i], windowSize/10+X_OFFSET, (i+1)*windowSize/10+Y_OFFSET);
             }
             if(currentGame != 4 && currentGame != 0) {
-                g2.drawString("Kill the other kite on the small screen", windowWidth / 10 + xOffset, (instructionsArray.length + 2) * windowWidth / 10 + yOffset);
-                g2.drawString("by hovering over it to start", windowWidth / 10 + xOffset, (instructionsArray.length + 3) * windowWidth / 10 + yOffset);
+                g2.drawString("Kill the other kite on the small screen", windowSize / 10 + X_OFFSET, (instructionsArray.length + 2) * windowSize / 10 + Y_OFFSET);
+                g2.drawString("by hovering over it to start", windowSize / 10 + X_OFFSET, (instructionsArray.length + 3) * windowSize / 10 + Y_OFFSET);
             } else if(currentGame == 0) {
-                g2.drawString("Kill the other kite on the small screen", windowWidth / 10 + xOffset, (instructionsArray.length + 1) * windowWidth / 10 + yOffset);
-                g2.drawString("by hovering over it to start", windowWidth / 10 + xOffset, (instructionsArray.length + 2) * windowWidth / 10 + yOffset);
+                g2.drawString("Kill the other kite on the small screen", windowSize / 10 + X_OFFSET, (instructionsArray.length + 1) * windowSize / 10 + Y_OFFSET);
+                g2.drawString("by hovering over it to start", windowSize / 10 + X_OFFSET, (instructionsArray.length + 2) * windowSize / 10 + Y_OFFSET);
             }
         }
         if(isStart) isStart = false;

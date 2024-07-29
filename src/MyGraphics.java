@@ -1,13 +1,8 @@
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
 
 public class MyGraphics {
-    private Color outlineColor;
 
-    public MyGraphics(Color oc) {
-        this.outlineColor = oc;
+    public MyGraphics() {
     }
 
     private boolean colorIn(int x, int y, Color color, String type) {
