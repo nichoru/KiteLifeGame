@@ -261,6 +261,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         Graphics2D g2 = (Graphics2D) g;
 
         if(Main.isInstructions && Main.currentGame == this.game) {
+            clearScreen();
             for(int i = 0; i < screenPixelSize; i++) {
                 for(int j = 0; j < screenPixelSize; j++) {
                     this.screen[1][i][j] = Color.BLACK;
@@ -361,21 +362,41 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             g2.setColor(Color.BLACK);
             g2.setFont(new Font("Arial", Font.PLAIN, windowWidth/20));
             for(int i = 0; i < this.buttons.length; i++) {
-                if(this.buttons[i].isAlive()) g2.drawString("Price: "+(5-this.buttons[i].getLives())+" "+this.buttonNames[i], windowWidth/10+(i%2)*windowWidth/2+xOffset, 2*windowHeight/3-(i/2)*windowHeight/2+yOffset);
-                switch(this.buttons[i].getLives()) {
-                    case 0:
-                        this.describeArray = new String[] {""};
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        this.describeArray = new String[] {"Buy for the upper two", "segments to slowly", "turn "+buttonNames[i]};
-                }
-                for(int j = 0; j < this.describeArray.length; j++) {
-                    g2.drawString(this.describeArray[j], (i%2)*windowWidth/2+xOffset, 5*windowHeight/6+(j+1)*windowHeight/20-(i/2)*windowHeight/2+yOffset);
+                if(this.buttons[i].isAlive()) {
+                    g2.drawString("Price: " + (5 - this.buttons[i].getLives()) + " " + this.buttonNames[i], windowWidth / 10 + (i % 2) * windowWidth / 2 + xOffset, 2 * windowHeight / 3 - (i / 2) * windowHeight / 2 + yOffset);
+                    switch (this.buttons[i].getLives()) {
+                        case 0:
+                            this.describeArray = new String[]{""};
+                        case 1:
+                            this.describeArray = new String[]{"", "segment to change", "colour faster"};
+                            switch (i) {
+                                case 0:
+                                    this.describeArray[0] = "Buy for the lower left";
+                                    break;
+                                case 1:
+                                    this.describeArray[0] = "Buy for the lower right";
+                                    break;
+                                case 2:
+                                    this.describeArray[0] = "Buy for the upper left";
+                                    break;
+                                case 3:
+                                    this.describeArray[0] = "Buy for the upper right";
+                            }
+                            break;
+                        case 2:
+                            if (i > 0)
+                                this.describeArray = new String[]{"Buy for clicks", "to be able to", "turn the kite " + buttonNames[i - 1]};
+                            else this.describeArray = new String[]{"Buy for clicks", "to be better"};
+                            break;
+                        case 3:
+                            this.describeArray = new String[]{"Buy for the lower two", "segments to slowly", "turn " + buttonNames[i]};
+                            break;
+                        case 4:
+                            this.describeArray = new String[]{"Buy for the upper two", "segments to slowly", "turn " + buttonNames[i]};
+                    }
+                    for (int j = 0; j < this.describeArray.length; j++) {
+                        g2.drawString(this.describeArray[j], (i % 2) * windowWidth / 2 + xOffset, 5 * windowHeight / 6 + (j + 1) * windowHeight / 20 - (i / 2) * windowHeight / 2 + yOffset);
+                    }
                 }
             }
         }

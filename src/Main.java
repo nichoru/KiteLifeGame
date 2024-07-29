@@ -141,6 +141,9 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         for(int i = 0; i < buttons.length; i++) buttons[i].resurrect();
     }
     public void showButtons() {
+        if(player.getXP(0) == 255) {
+            buttons[0].kill();
+        }
         for(int i = 0; i < buttons.length; i++) {
             buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
         }
@@ -159,6 +162,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         currentGame = nextGame;
         clearScreen();
         repaint();
+        startKite.resurrect();
         if(currentGame!=0) currentMinigame = new Minigame(currentGame, windowWidth, windowHeight);
         else if(!isCookie) {
             isCookie = true;
@@ -166,7 +170,6 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
         }
         if(currentGame==1) kiteSimon();
         player.resurrect();
-        startKite.resurrect();
         if(currentGame != 0) currentMinigame.dispose();
         if(!isWin) kiteHome();
     }

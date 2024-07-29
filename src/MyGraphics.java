@@ -25,10 +25,11 @@ public class MyGraphics {
                         Main.currentScreenType[x][y] = type;
                         return false;
                     }
-                    if(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() > 0){
-                        if (Main.cookieMinigame.getPlayer().getXP(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() - 1) >= 255 * (4 - Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))) && !Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).isImmune()) {
+                    if(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).isAlive() && Main.cookieMinigame.getPlayer().isAlive()){
+                        if(Main.cookieMinigame.getPlayer().getXP(Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives() - 1) >= 255 * (4 - Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))) && !Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).isImmune()) {
                             Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).loseLife();
                             Main.cookieMinigame.cookiePay(255 * (4 - Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives()), Main.cookieMinigame.getButton(Integer.parseInt(Main.cookieMinigame.getScreenType(x, y))).getLives(), Integer.parseInt(Main.cookieMinigame.getScreenType(x, y)));
+                            Main.cookieMinigame.clearScreen();
                         }
                     }
                     Main.cookieMinigame.setScreenType(x, y, type);
