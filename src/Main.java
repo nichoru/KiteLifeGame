@@ -23,6 +23,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
     public static Minigame cookieMinigame;
     public static boolean isCookie;
     public static boolean isInCookie;
+    private boolean isWin;
     public static int nextGame;
     public static boolean isInstructions;
     private String[] instructionsArray;
@@ -145,8 +146,10 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
 
     public void kiteHome() {
         currentGame = 4;
+        isWin = true;
         for(int i = 0; i < buttons.length; i++) {
             buttons[i].setLives(4-(player.getXP(i)/63));
+            if(buttons[i].isAlive()) isWin = false;
         }
         isInstructions = true;
         runGame(0F);
@@ -266,12 +269,13 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
                     instructionsArray = new String[] {"Welcome to Kite Flying 101!", "Dodge the clouds and try to stay alive", "The clouds will get faster and faster"};
                     break;
                 case 4:
-                    instructionsArray = new String[] {"Welcome to Kite Life!", "Hover over the kites to start each", "minigame (they will disappear ", "as you gain xp)", "", "The aim is to have a fully coloured kite"};
+                    if(isWin) instructionsArray = new String[] {"Congratulations!", "You have won the game!"};
+                    else instructionsArray = new String[] {"Welcome to Kite Life!", "Hover over the kites to start each", "minigame (they will disappear ", "as you gain xp)", "", "The aim is to have a fully coloured kite"};
                     for(int i = 0; i < instructionsArray.length; i++) {
                         g2.drawString(instructionsArray[i], windowWidth/20+xOffset, (2*i+7)*windowWidth/20+yOffset);
                     }
                     instructionsArray = new String[] {""};
-            }
+                }
 
             for(int i = 0; i < instructionsArray.length; i++) {
                 g2.drawString(instructionsArray[i], windowWidth/10+xOffset, (i+1)*windowWidth/10+yOffset);
