@@ -6,7 +6,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private JPanel window = new JPanel();
     private Canvas canvas = new Canvas();
     private String title = "Kite Life";
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int windowWidth;
     private int windowHeight;
     private float scale;
@@ -31,7 +30,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
     private String[][] screenType = new String[screenPixelSize][screenPixelSize];
     private boolean isStart = true;
-    private final int UPDATE_SPEED = 10; // milliseconds between screen updates
     private int cookieSegment;
     private int cookieClick;
     private float cookieClickPower;
@@ -41,11 +39,11 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private int cookieMaxBottom;
     private String[] describeArray;
 
-    public Minigame(int game, int windowWidth, int windowHeight) {
+    public Minigame(int game, int windowSize) {
         setTitle(title);
         this.scale = (float) 1/2;
-        this.windowWidth = (int) ((screenSize.width-windowWidth)*this.scale);
-        this.windowHeight = (int) ((screenSize.height-windowHeight)*this.scale);
+        this.windowWidth = (int) ((Main.SCREEN_SIZE.width-windowSize)*this.scale);
+        this.windowHeight = (int) ((Main.SCREEN_SIZE.height-windowSize)*this.scale);
         if(this.windowWidth < this.windowHeight) this.windowHeight = this.windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
         else this.windowWidth = this.windowHeight;
         getContentPane().setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
@@ -55,9 +53,9 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         window.setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
         window.add(canvas);
 
-        if(screenSize.width > screenSize.height) setLocation((game%2)*(screenSize.width/2+windowWidth/2)+(screenSize.width-windowWidth-this.windowWidth*2)/4, ((3-game)/2)*(screenSize.height/2)+(screenSize.height-windowHeight)/4); // centres the window on the user's screen
-        else if(screenSize.height > screenSize.width) setLocation((game%2)*(screenSize.width/2)+(screenSize.width-windowWidth)/4, ((3-game)/2)*(screenSize.height/2+windowHeight/2)+(screenSize.height-windowHeight-this.windowHeight*2)/4); // centres the window on the user's screen
-        else setLocation((game%2)*(screenSize.width/2)+(screenSize.width-windowWidth)/4, ((3-game)/2)*(screenSize.height/2)+(screenSize.height-windowHeight)/4); // centres the window on the user's screen
+        if(Main.SCREEN_SIZE.width > Main.SCREEN_SIZE.height) setLocation((game%2)*(Main.SCREEN_SIZE.width/2+windowWidth/2)+(Main.SCREEN_SIZE.width-windowWidth-this.windowWidth*2)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowHeight)/4); // centres the window on the user's screen
+        else if(Main.SCREEN_SIZE.height > Main.SCREEN_SIZE.width) setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowWidth)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2+windowHeight/2)+(Main.SCREEN_SIZE.height-windowHeight-this.windowHeight*2)/4); // centres the window on the user's screen
+        else setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowWidth)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowHeight)/4); // centres the window on the user's screen
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -129,7 +127,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                 if(Main.isCookie && this.game != 0) Main.cookieMinigame.repaint();
                 repaint();
                 if(updateXP>0) Main.player.gainXP(updateXP, this.game, 255);
-                Thread.sleep(UPDATE_SPEED);
+                Thread.sleep(Main.UPDATE_SPEED);
             } catch(InterruptedException e) {
                 System.out.println(e);
             }
@@ -307,7 +305,7 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                     if (!Main.isWait) {
                         if (Main.simonCounter < Main.simonOrder.length) {
                             if (Main.simonOrder[Main.simonCounter] == 4) {
-                                Main.simonTimer = 1 - Main.immuneTime;
+                                Main.simonTimer = 1 - Main.IMMUNE_TIME;
                                 Main.player.gainXP(Main.simonCounter * 2, this.game, 255);
                                 if (Main.simonOrder[Main.simonOrder.length - 1] != 4) Main.player.kill();
                                 Main.simonOrder[Main.simonCounter] = (int) Math.floor(Math.random() * 4);
