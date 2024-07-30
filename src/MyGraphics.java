@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.*; // lets me use colours
 
 public class MyGraphics {
 

@@ -1,5 +1,5 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.*; // lets me make a window
+import java.awt.*; // helps with drawing on the window
 import java.awt.event.*;
 
 public class Minigame extends JFrame implements ActionListener, MouseListener, MouseMotionListener {

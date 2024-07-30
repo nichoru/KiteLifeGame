@@ -1,41 +1,49 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.*; // lets me make a window
+import java.awt.*; // helps with drawing on the window
+import java.awt.event.*; // lets me use mouse events
 
-public class Main extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
+public class Main extends JFrame implements MouseListener, MouseMotionListener {
 
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int windowSize;
-    private int mouseX;
-    private int mouseY;
-    private final int X_OFFSET = 8;
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // gets the user's actual screen size
+    private int windowSize; // the length of the window's sides (it's a square)
+
+    private final int X_OFFSET = 8; // accounts for how the canvas is automatically drawn at slightly different coordinates to the window
     private final int Y_OFFSET = 31;
+
     private static final int SCREEN_PIXEL_SIZE = 150;
-    private final MyGraphics M_G = new MyGraphics();
-    public static Kite player;
-    public static Kite startKite;
-    public static int currentGame;
-    public static Minigame currentMinigame;
-    public static Minigame cookieMinigame;
-    public static boolean isCookie;
-    public static boolean isInCookie;
-    private boolean isWin;
-    public static int nextGame;
-    public static boolean isInstructions;
-    private String[] instructionsArray;
-    public static Kite[] buttons = new Kite[4];
-    private final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    public static int immuneTime = 50;
-    public static boolean isWait = true;
-    public static int simonTimer;
-    public static int[] simonOrder;
-    public static int simonCounter;
     public static Color[][][] screen = new Color[2][SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
     public static Color[][][] currentScreen = screen;
     public static String[][] screenType = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
     public static String[][] currentScreenType = screenType;
+
+    private int mouseX; // the x coordinate of the mouse within the pixelated screen array
+    private int mouseY; // the y coordinate of the mouse within the pixelated screen array
+
+    private final MyGraphics M_G = new MyGraphics();
+
+    public static Kite player;
+    public static Kite startKite;
+    public static Kite[] buttons = new Kite[4];
+    private final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
+    public static int immuneTime = 50;
+
+    public static int currentGame;
+    public static int nextGame;
+    public static Minigame currentMinigame;
+    private boolean isWin;
+    public static boolean isInstructions;
+    private String[] instructionsArray;
     private boolean isStart = true;
     private final int UPDATE_SPEED = 10; // milliseconds between screen updates
+
+    public static Minigame cookieMinigame;
+    public static boolean isCookie;
+    public static boolean isInCookie;
+
+    public static boolean isWait = true;
+    public static int simonTimer;
+    public static int[] simonOrder;
+    public static int simonCounter;
 
     public static void main(String[] args) {
         new Main();
@@ -137,7 +145,7 @@ public class Main extends JFrame implements ActionListener, MouseListener, Mouse
             System.out.println(player.getXP(currentGame));
         }
         player.resurrect();
-        for(int i = 0; i < buttons.length; i++) buttons[i].resurrect();
+        for (Kite button : buttons) button.resurrect();
     }
     public void showButtons() {
         if(player.getXP(0) == 255) {
