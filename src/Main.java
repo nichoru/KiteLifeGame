@@ -2,7 +2,7 @@ import javax.swing.*; // lets me make a window
 import java.awt.*; // helps with drawing on the window
 import java.awt.event.*; // lets me use mouse events
 
-public class Main extends JFrame implements MouseListener, MouseMotionListener {
+public class Main extends JFrame implements MouseMotionListener {
 
     public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize(); // gets the user's actual screen size
     private final int WINDOW_SIZE; // the length of the window's sides (it's a square)
@@ -14,17 +14,17 @@ public class Main extends JFrame implements MouseListener, MouseMotionListener {
     private static final int SCREEN_PIXEL_SIZE = 150; // the length of the sides of the pixelated screen
     public static Color[][][] screen; // the pixelated screen array - this holds both the previous screen (so it can check for changes) and the current screen, as well as the x and y of a colour
     public static Color[][][] currentScreen; // this lets MyGraphics know which screen to draw on
-    public static String[][] screenType = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE]; // tells me the type of each pixel in the screen array - this is used for collision detection in
-    public static String[][] currentScreenType = screenType; // this lets MyGraphics know which screen to draw collision on
+    public static String[][] screenType; // tells me the type of each pixel in the screen array - this is used for collision detection in
+    public static String[][] currentScreenType; // this lets MyGraphics know which screen to draw collision on
 
     private int mouseX; // the x coordinate of the mouse within the pixelated screen array
     private int mouseY; // the y coordinate of the mouse within the pixelated screen array
 
     private final MyGraphics M_G = new MyGraphics(); // makes a new MyGraphics object, which is used for drawing on the screen and collision detection
 
-    public static Kite player; // the player's kite
+    public static Kite player; // the player's kite that moves with their mouse
     public static Kite startKite; // the kite that you kill to start the minigames during the instructions screen
-    public static Kite[] buttons; // the coloured kites in the home screen and simon screen
+    public static Kite[] buttons = new Kite[4]; // the coloured kites in the home screen and simon screen
     private final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED}; // the colours of the button kites
     public static final int IMMUNE_TIME = 50; // the time in frames that kites are immune for after losing a life
 
@@ -52,12 +52,15 @@ public class Main extends JFrame implements MouseListener, MouseMotionListener {
 
     public Main() { // constructor for Main
         setTitle("Kite Life"); // names the window "Kite Life"
-        if(SCREEN_SIZE.width < SCREEN_SIZE.height) WINDOW_SIZE = SCREEN_SIZE.width/2; // makes the window a square that's based on the smaller out of the user's screen height and width
+
+        // makes the window a square that's based on the smaller out of the user's screen height and width
+        if(SCREEN_SIZE.width < SCREEN_SIZE.height) WINDOW_SIZE = SCREEN_SIZE.width/2;
         else WINDOW_SIZE = SCREEN_SIZE.height/2;
         getContentPane().setPreferredSize(new Dimension(WINDOW_SIZE, WINDOW_SIZE));
+
+        // creating the main window and canvas
         getContentPane().setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         JPanel window = new JPanel();
         window.setPreferredSize(new Dimension(WINDOW_SIZE, WINDOW_SIZE));
         Canvas canvas = new Canvas();
@@ -65,99 +68,90 @@ public class Main extends JFrame implements MouseListener, MouseMotionListener {
 
         setLocation((SCREEN_SIZE.width-WINDOW_SIZE)/2, (SCREEN_SIZE.height-WINDOW_SIZE)/2); // centres the window on the user's screen
 
-        addMouseListener(this);
-        addMouseMotionListener(this);
+        addMouseMotionListener(this); // lets me see if the mouse moves
 
+        // finishes making the window
         this.pack();
         this.toFront();
         this.setVisible(true);
 
+        // setting up a few variables
         screen = new Color[2][SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
         currentScreen = screen;
-
+        screenType = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
+        currentScreenType = screenType;
         isCookie = false;
         isInCookie = false;
         isInstructions = false;
         isStart = true;
         isWait = true;
-
         player = new Kite(SCREEN_PIXEL_SIZE, Color.WHITE, 0, "player", IMMUNE_TIME);
         startKite = new Kite(SCREEN_PIXEL_SIZE, Color.WHITE, 0, "start", IMMUNE_TIME);
-        buttons = new Kite[4];
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(SCREEN_PIXEL_SIZE, BUTTON_COLORS[i], 0, i+"", IMMUNE_TIME);
+
         kiteHome();
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-    public void mouseExited(MouseEvent e) {System.out.println("exit");}
-    public void mouseEntered(MouseEvent e) {
-        System.out.println("enter");
-
-    }
-    public void mouseReleased(MouseEvent e) {System.out.println("release");}
-    public void mousePressed(MouseEvent e) {System.out.println("press");}
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) { // updates the mouse's position in the pixelated screen array when moved
         mouseX = (e.getX() - X_OFFSET)*SCREEN_PIXEL_SIZE/WINDOW_SIZE;
         mouseY = (e.getY() - Y_OFFSET)*SCREEN_PIXEL_SIZE/WINDOW_SIZE;
     }
-    public void mouseDragged(MouseEvent e) {System.out.println("drag");}
-    public void mouseClicked(MouseEvent e) {
-        System.out.println("click at "+e.getX()+", "+e.getY());
+    public void mouseDragged(MouseEvent e) { // also updates the mouse's position in the pixelated screen array when dragged
+        mouseX = (e.getX() - X_OFFSET)*SCREEN_PIXEL_SIZE/WINDOW_SIZE;
+        mouseY = (e.getY() - Y_OFFSET)*SCREEN_PIXEL_SIZE/WINDOW_SIZE;
     }
 
-    public void clearScreen() {
+    public void runGame() { // runs the game on the main screen by updating the screen
+        clearScreen(); // clears the screen so it can be redrawn
+
+        while(player.isAlive()) { // while the player is alive, keep updating the screen
+            try{
+                if(isCookie) { // runs the cookie minigame if it's being played (this allows it to be played at the same time as the home screen
+                    cookieMinigame.repaint();
+                    if(!cookieMinigame.getPlayer().isAlive()) { // closes the cookie minigame when the player finishes it
+                        player.changeColor(BUTTON_COLORS[0], 0);
+                        System.out.println(player.getXP(0));
+                        cookieMinigame.dispose();
+                        isCookie = false;
+                        isInCookie = false;
+
+                        // checks if this was the last minigame to be won, and if so, triggers the win screen
+                        isWin = true;
+                        for(int i = 0; i < buttons.length; i++) if(player.getXP(i) < 255) isWin = false;
+                        if(isWin) kiteHome();
+                    }
+                }
+                if(currentGame == 1 && !isWait) currentMinigame.repaint(); // runs the simon minigame if it's time for the player to copy the buttons
+                else repaint(); // otherwise, just repaint the home screen
+                if(currentGame == 4) { // runs through all the buttons and checks if they're dead, and if so, kills the player (which makes the home screen stop running)
+                    for(int i = 0; i < buttons.length; i++) {
+                        if(!buttons[i].isAlive() && player.getXP(i) != 255) player.kill();
+                    }
+                }
+                Thread.sleep(UPDATE_SPEED); // waits for a bit before updating the screen again
+            } catch(InterruptedException e) {
+                System.out.println(e); // if there's an error to do with Thread.sleep(), print it
+            }
+        }
+
+        // when the player dies, bring it back to life and change the colour to represent new xp gained if that happens
+        if(currentGame != 4) player.changeColor(new Color(255-((255-BUTTON_COLORS[currentGame].getRed())*player.getXP(currentGame))/255, 255-((255-BUTTON_COLORS[currentGame].getGreen())*player.getXP(currentGame))/255, 255-((255-BUTTON_COLORS[currentGame].getBlue())*player.getXP(currentGame))/255), currentGame);
+        player.resurrect();
+        for (Kite button : buttons) button.resurrect();
+    }
+
+    public void clearScreen() { // clears the screen array so the next time it's drawn, everything is printed
         for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
             for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                 screen[0][i][j] = null;
             }
         }
     }
-    public void runGame(float updateXP) {
-        clearScreen();
-        while(player.isAlive()) {
-            try{
-                if(isCookie) {
-                    cookieMinigame.repaint();
-                    if(!cookieMinigame.getPlayer().isAlive()) {
-                        player.changeColor(BUTTON_COLORS[0], 0);
-                        System.out.println(player.getXP(0));
-                        cookieMinigame.dispose();
-                        isCookie = false;
-                        isInCookie = false;
-                        isWin = true;
-                        for(int i = 0; i < buttons.length; i++) if(player.getXP(i) < 255) isWin = false;
-                        if(isWin) kiteHome();
-                    }
-                }
-                if(currentGame == 1 && !isWait) currentMinigame.repaint();
-                else repaint();
-                if(currentGame == 4) {
-                    for(int i = 0; i < buttons.length; i++) {
-                        if(!buttons[i].isAlive() && player.getXP(i) != 255) player.kill();
-                    }
-                }
-                if(updateXP>0) player.gainXP(updateXP, currentGame, 255);
-                Thread.sleep(UPDATE_SPEED);
-            } catch(InterruptedException e) {
-                System.out.println(e);
-            }
-        }
-        if(currentGame != 4) {
-            player.changeColor(new Color(255-((255-BUTTON_COLORS[currentGame].getRed())*player.getXP(currentGame))/255, 255-((255-BUTTON_COLORS[currentGame].getGreen())*player.getXP(currentGame))/255, 255-((255-BUTTON_COLORS[currentGame].getBlue())*player.getXP(currentGame))/255), currentGame);
-            System.out.println(currentGame);
-            System.out.println(player.getXP(currentGame));
-        }
-        player.resurrect();
-        for (Kite button : buttons) button.resurrect();
-    }
-    public void showButtons() {
-        if(player.getXP(0) == 255) {
+    public void showButtons() { // shows the buttons on the screen
+        if(player.getXP(0) == 255 && currentGame != 1) { // if the cookie minigame is complete, kill the yellow kite, so it can't be played again
             buttons[0].kill();
         }
-        for(int i = 0; i < buttons.length; i++) {
+        for(int i = 0; i < buttons.length; i++) { // shows the buttons in the four corners of the screen
             buttons[i].show(M_G, SCREEN_PIXEL_SIZE/4+(i%2)*SCREEN_PIXEL_SIZE/2, SCREEN_PIXEL_SIZE/4+((3-i)/2)*SCREEN_PIXEL_SIZE/2);
         }
     }
@@ -171,7 +165,7 @@ public class Main extends JFrame implements MouseListener, MouseMotionListener {
             if(buttons[i].isAlive()) isWin = false;
         }
         isInstructions = true;
-        runGame(0F);
+        runGame();
         currentGame = nextGame;
         clearScreen();
         repaint();
@@ -196,7 +190,7 @@ public class Main extends JFrame implements MouseListener, MouseMotionListener {
         }
         isWait = true;
 
-        runGame(0F);
+        runGame();
 
         simonCounter = simonOrder.length;
     }
