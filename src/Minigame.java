@@ -53,9 +53,9 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         window.setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
         window.add(canvas);
 
-        if(Main.SCREEN_SIZE.width > Main.SCREEN_SIZE.height) setLocation((game%2)*(Main.SCREEN_SIZE.width/2+windowWidth/2)+(Main.SCREEN_SIZE.width-windowWidth-this.windowWidth*2)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowHeight)/4); // centres the window on the user's screen
-        else if(Main.SCREEN_SIZE.height > Main.SCREEN_SIZE.width) setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowWidth)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2+windowHeight/2)+(Main.SCREEN_SIZE.height-windowHeight-this.windowHeight*2)/4); // centres the window on the user's screen
-        else setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowWidth)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowHeight)/4); // centres the window on the user's screen
+        if(Main.SCREEN_SIZE.width > Main.SCREEN_SIZE.height) setLocation((game%2)*(Main.SCREEN_SIZE.width/2+windowSize/2)+(Main.SCREEN_SIZE.width-windowSize-this.windowWidth*2)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowSize)/4); // centres the window on the user's screen
+        else if(Main.SCREEN_SIZE.height > Main.SCREEN_SIZE.width) setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowSize)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2+windowSize/2)+(Main.SCREEN_SIZE.height-windowSize-this.windowHeight*2)/4); // centres the window on the user's screen
+        else setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowSize)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowSize)/4); // centres the window on the user's screen
 
         addMouseListener(this);
         addMouseMotionListener(this);
