@@ -8,10 +8,10 @@ public class Main extends JFrame implements MouseMotionListener {
     private final int WINDOW_SIZE; // the length of the window's sides (it's a square)
 
     // accounts for how the canvas is automatically drawn at slightly different coordinates to the window
-    private final int X_OFFSET = 8;
+    public final static int X_OFFSET = 8;
     private final int Y_OFFSET = 31;
 
-    private static final int SCREEN_PIXEL_SIZE = 150; // the length of the sides of the pixelated screen
+    private final int SCREEN_PIXEL_SIZE = 150; // the length of the sides of the pixelated screen
     public static Color[][][] screen; // the pixelated screen array - this holds both the previous screen (so it can check for changes) and the current screen, as well as the x and y of a colour
     public static Color[][][] currentScreen; // this lets MyGraphics know which screen to draw on
     public static String[][] screenType; // tells me the type of each pixel in the screen array - this is used for collision detection in
@@ -132,7 +132,6 @@ public class Main extends JFrame implements MouseMotionListener {
                     cookieMinigame.repaint();
                     if(!cookieMinigame.getPlayer().isAlive()) { // closes the cookie minigame when the player finishes it
                         player.changeColor(BUTTON_COLORS[0], 0);
-                        System.out.println(player.getXP(0));
                         cookieMinigame.dispose();
                         isCookie = false;
                         isInCookie = false;
@@ -267,7 +266,7 @@ public class Main extends JFrame implements MouseMotionListener {
             g2.setFont(new Font("Arial", Font.PLAIN, WINDOW_SIZE/20));
             switch(currentGame) { // changes the instructions based on what game is next
                 case 0:
-                    instructionsArray = new String[]{"Welcome to Kite Clicker!", "Click to gain more colour", "When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite", "The aim is to have a fully yellow kite", "YOU CAN PLAY OTHER GAMES STILL"};
+                    instructionsArray = new String[]{"Welcome to Kite Clicker!", "Click lots to gain more colour", "When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite", "The aim is to have a fully yellow kite", "YOU CAN PLAY OTHER GAMES STILL"};
                     break;
                 case 1:
                     instructionsArray = new String[]{"Welcome to Kite Says!", "Watch the buttons light up", "on the main screen", "Afterwards, hover over them on the", "small screen in the same order"};
@@ -295,13 +294,7 @@ public class Main extends JFrame implements MouseMotionListener {
             for(int i = 0; i < instructionsArray.length; i++) { // actually prints instructions
                 g2.drawString(instructionsArray[i], WINDOW_SIZE/10+X_OFFSET, (i+1)*WINDOW_SIZE/10+Y_OFFSET);
             }
-            if(currentGame != 4 && currentGame != 0) { // this instruction is the same for all games
-                g2.drawString("Kill the other kite on the small screen", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 2) * WINDOW_SIZE / 10 + Y_OFFSET);
-                g2.drawString("by hovering over it to start", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 3) * WINDOW_SIZE / 10 + Y_OFFSET);
-            } else if(currentGame == 0) { // there isn't much room in the cookie minigame's instructions, so it's a bit more cramped
-                g2.drawString("Kill the other kite on the small screen", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 1) * WINDOW_SIZE / 10 + Y_OFFSET);
-                g2.drawString("by hovering over it to start", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 2) * WINDOW_SIZE / 10 + Y_OFFSET);
-            }
+            if(currentGame != 4) g2.drawString("Hover over the other kite to start", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 2) * WINDOW_SIZE / 10 + Y_OFFSET); // this instruction is in all games except the home screen
         }
     }
 }

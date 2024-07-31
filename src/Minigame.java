@@ -1,34 +1,33 @@
 import javax.swing.*; // lets me make a window
 import java.awt.*; // helps with drawing on the window
-import java.awt.event.*;
+import java.awt.event.*; // lets me use mouse events
 
-public class Minigame extends JFrame implements ActionListener, MouseListener, MouseMotionListener {
-    private JPanel window = new JPanel();
-    private Canvas canvas = new Canvas();
-    private String title = "Kite Life";
-    private int windowWidth;
-    private int windowHeight;
-    private float scale;
+public class Minigame extends JFrame implements MouseListener, MouseMotionListener {
+    private final int WINDOW_SIZE; // the length of the window's sides (it's a square)
+
+    // accounts for how the canvas is automatically drawn at slightly different coordinates to the window
+    private final int X_OFFSET = 8;
+    private final int Y_OFFSET = 31;
+
+    private final int SCREEN_PIXEL_SIZE = 150;
+    private Color[][][] screen;
+    private String[][] screenType;
+
     private int mouseX;
     private int mouseY;
-    private int xOffset = 8;
-    private int yOffset = 31;
-    private int screenPixelSize = 150;
-    private MyGraphics mg = new MyGraphics();
+    private final MyGraphics M_G = new MyGraphics();
     private Kite player;
     private Kite startKite;
     private int game;
     private Kite[] buttons = new Kite[4];
-    private Color[] buttonColors = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
-    private String[] buttonNames = {"yellow", "magenta", "cyan", "red"};
-    private int immuneTime = 35;
+    private final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED};
+    private final String[] BUTTON_NAMES = {"yellow", "magenta", "cyan", "red"};
+    private final int IMMUNE_TIME = 35;
     private Needle xNeedle;
     private Needle yNeedle;
     private Cloud cloud1;
     private Cloud cloud2;
     private Cloud cloud3;
-    private Color[][][] screen = new Color[2][screenPixelSize][screenPixelSize];
-    private String[][] screenType = new String[screenPixelSize][screenPixelSize];
     private boolean isStart = true;
     private int cookieSegment;
     private int cookieClick;
@@ -40,21 +39,21 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     private String[] describeArray;
 
     public Minigame(int game, int windowSize) {
+        String title = "Kite Life";
         setTitle(title);
-        this.scale = (float) 1/2;
-        this.windowWidth = (int) ((Main.SCREEN_SIZE.width-windowSize)*this.scale);
-        this.windowHeight = (int) ((Main.SCREEN_SIZE.height-windowSize)*this.scale);
-        if(this.windowWidth < this.windowHeight) this.windowHeight = this.windowWidth; // makes the window a square that's based on the smaller out of the user's screen height and width
-        else this.windowWidth = this.windowHeight;
-        getContentPane().setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
+        if(Main.SCREEN_SIZE.width < Main.SCREEN_SIZE.height) this.WINDOW_SIZE = (Main.SCREEN_SIZE.width-windowSize)/2; // makes the window a square that's based on the smaller out of the user's screen height and width
+        else this.WINDOW_SIZE = (Main.SCREEN_SIZE.height-windowSize)/2;
+        getContentPane().setPreferredSize(new Dimension(this.WINDOW_SIZE, this.WINDOW_SIZE));
         getContentPane().setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        window.setPreferredSize(new Dimension(this.windowWidth, this.windowHeight));
+        JPanel window = new JPanel();
+        window.setPreferredSize(new Dimension(this.WINDOW_SIZE, this.WINDOW_SIZE));
+        Canvas canvas = new Canvas();
         window.add(canvas);
 
-        if(Main.SCREEN_SIZE.width > Main.SCREEN_SIZE.height) setLocation((game%2)*(Main.SCREEN_SIZE.width/2+windowSize/2)+(Main.SCREEN_SIZE.width-windowSize-this.windowWidth*2)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowSize)/4); // centres the window on the user's screen
-        else if(Main.SCREEN_SIZE.height > Main.SCREEN_SIZE.width) setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowSize)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2+windowSize/2)+(Main.SCREEN_SIZE.height-windowSize-this.windowHeight*2)/4); // centres the window on the user's screen
+        if(Main.SCREEN_SIZE.width > Main.SCREEN_SIZE.height) setLocation((game%2)*(Main.SCREEN_SIZE.width/2+windowSize/2)+(Main.SCREEN_SIZE.width-windowSize-this.WINDOW_SIZE*2)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowSize)/4); // centres the window on the user's screen
+        else if(Main.SCREEN_SIZE.height > Main.SCREEN_SIZE.width) setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowSize)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2+windowSize/2)+(Main.SCREEN_SIZE.height-windowSize-this.WINDOW_SIZE*2)/4); // centres the window on the user's screen
         else setLocation((game%2)*(Main.SCREEN_SIZE.width/2)+(Main.SCREEN_SIZE.width-windowSize)/4, ((3-game)/2)*(Main.SCREEN_SIZE.height/2)+(Main.SCREEN_SIZE.height-windowSize)/4); // centres the window on the user's screen
 
         addMouseListener(this);
@@ -65,9 +64,11 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.setVisible(true);
 
         if(game != 0) this.player = Main.player;
-        else this.player = new Kite(screenPixelSize, Color.WHITE, 0, "player", immuneTime);
+        else this.player = new Kite(SCREEN_PIXEL_SIZE, Color.WHITE, 0, "player", IMMUNE_TIME);
         this.game = game;
 
+        this.screen = new Color[2][SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
+        this.screenType = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
         this.startKite = Main.startKite;
         runGame(0F, this.startKite);
         Main.isInstructions = false;
@@ -87,10 +88,6 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
     public void mouseExited(MouseEvent e) {
         if(this.game == 0) Main.isInCookie = false;
     }
@@ -100,8 +97,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     public void mouseReleased(MouseEvent e) {System.out.println("release");}
     public void mousePressed(MouseEvent e) {System.out.println("press");}
     public void mouseMoved(MouseEvent e) {
-        mouseX = (e.getX() - xOffset)*screenPixelSize/windowWidth;
-        mouseY = (e.getY() - yOffset)*screenPixelSize/windowWidth;
+        mouseX = (e.getX() - X_OFFSET)*SCREEN_PIXEL_SIZE/this.WINDOW_SIZE;
+        mouseY = (e.getY() - Y_OFFSET)*SCREEN_PIXEL_SIZE/this.WINDOW_SIZE;
     }
     public void mouseDragged(MouseEvent e) {System.out.println("drag");}
     public void mouseClicked(MouseEvent e) {
@@ -113,8 +110,8 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
     }
 
     public void clearScreen() {
-        for(int i = 0; i < screenPixelSize; i++) {
-            for(int j = 0; j < screenPixelSize; j++) {
+        for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+            for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                 screen[0][i][j] = null;
             }
         }
@@ -133,13 +130,13 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
             }
         }
         if(this.game != 4) {
-            Main.player.changeColor(new Color(255-((255-buttonColors[game].getRed())*Main.player.getXP(this.game))/255, 255-((255-buttonColors[game].getGreen())*Main.player.getXP(this.game))/255, 255-((255-buttonColors[game].getBlue())*Main.player.getXP(this.game))/255), this.game);
+            Main.player.changeColor(new Color(255-((255-BUTTON_COLORS[game].getRed())*Main.player.getXP(this.game))/255, 255-((255-BUTTON_COLORS[game].getGreen())*Main.player.getXP(this.game))/255, 255-((255-BUTTON_COLORS[game].getBlue())*Main.player.getXP(this.game))/255), this.game);
             System.out.println(Main.player.getXP(this.game));
         }
     }
     public void showButtons() {
         for(int i = 0; i < buttons.length; i++) {
-            buttons[i].show(mg, screenPixelSize/4+(i%2)*screenPixelSize/2, screenPixelSize/4+((3-i)/2)*screenPixelSize/2);
+            buttons[i].show(M_G, SCREEN_PIXEL_SIZE/4+(i%2)*SCREEN_PIXEL_SIZE/2, SCREEN_PIXEL_SIZE/4+((3-i)/2)*SCREEN_PIXEL_SIZE/2);
         }
     }
 
@@ -152,35 +149,31 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
         this.cookieMaxTop = 4;
         this.cookieMaxBottom = 4;
         this.cookieSegment = buttons.length-1;
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(SCREEN_PIXEL_SIZE, BUTTON_COLORS[i], 0, i+"", IMMUNE_TIME*2);
     }
     public void kiteNeedle() {
         this.game = 2;
-        xNeedle = new Needle(screenPixelSize, player.getHeight(), true);
-        yNeedle = new Needle(screenPixelSize, player.getWidth(), false);
+        xNeedle = new Needle(SCREEN_PIXEL_SIZE, player.getHeight(), true);
+        yNeedle = new Needle(SCREEN_PIXEL_SIZE, player.getWidth(), false);
 
         runGame(0.03F, this.player);
     }
     public void kiteClassic() {
         this.game = 3;
-        cloud1 = new Cloud(screenPixelSize);
-        cloud2 = new Cloud(screenPixelSize);
-        cloud3 = new Cloud(screenPixelSize);
+        cloud1 = new Cloud(SCREEN_PIXEL_SIZE);
+        cloud2 = new Cloud(SCREEN_PIXEL_SIZE);
+        cloud3 = new Cloud(SCREEN_PIXEL_SIZE);
 
         runGame(0.03F, this.player);
     }
     public void kiteSimon() {
         this.game = 1;
-        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(screenPixelSize, buttonColors[i], 0, i+"", immuneTime*2);
+        for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(SCREEN_PIXEL_SIZE, BUTTON_COLORS[i], 0, i+"", IMMUNE_TIME*2);
         clearScreen();
     }
 
     public Kite getPlayer() {
         return this.player;
-    }
-
-    public Kite getStartKite() {
-        return this.startKite;
     }
 
     public Kite getButton(int i) {
@@ -260,17 +253,17 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
         if(Main.isInstructions && Main.currentGame == this.game) {
             clearScreen();
-            for(int i = 0; i < screenPixelSize; i++) {
-                for(int j = 0; j < screenPixelSize; j++) {
+            for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+                for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                     this.screen[1][i][j] = Color.BLACK;
                     this.screenType[i][j] = "background";
                 }
             }
-            this.startKite.show(mg, screenPixelSize/2, screenPixelSize/2);
+            this.startKite.show(M_G, SCREEN_PIXEL_SIZE/2, SCREEN_PIXEL_SIZE/2);
         } else {
 
-            for (int i = 0; i < screenPixelSize; i++) {
-                for (int j = 0; j < screenPixelSize; j++) {
+            for (int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+                for (int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                     this.screen[1][i][j] = Color.WHITE;
                     this.screenType[i][j] = "background";
                 }
@@ -327,30 +320,30 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                     break;
                 case 2:
                     xNeedle.move(player.getHeight());
-                    xNeedle.show(mg);
+                    xNeedle.show(M_G);
                     yNeedle.move(player.getWidth());
-                    yNeedle.show(mg);
+                    yNeedle.show(M_G);
                     break;
                 case 3:
                     cloud1.move();
-                    cloud1.show(mg);
+                    cloud1.show(M_G);
                     cloud2.move();
-                    cloud2.show(mg);
+                    cloud2.show(M_G);
                     cloud3.move();
-                    cloud3.show(mg);
+                    cloud3.show(M_G);
                     break;
                 case 4:
                     showButtons();
             }
         }
 
-        this.player.show(mg, mouseX, mouseY);
+        this.player.show(M_G, mouseX, mouseY);
 
-        for(int i = 0; i < screenPixelSize; i++) {
-            for(int j = 0; j < screenPixelSize; j++) {
+        for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
+            for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
                 if(this.screen[0][i][j] != this.screen[1][i][j] || isStart) {
                     g2.setColor(this.screen[1][i][j]);
-                    g2.fillRect(i * windowWidth / screenPixelSize + xOffset, j * windowHeight / screenPixelSize + yOffset, windowWidth / screenPixelSize + 1, windowHeight / screenPixelSize + 1);
+                    g2.fillRect(i * this.WINDOW_SIZE / SCREEN_PIXEL_SIZE + X_OFFSET, j * this.WINDOW_SIZE / SCREEN_PIXEL_SIZE + Y_OFFSET, this.WINDOW_SIZE / SCREEN_PIXEL_SIZE + 1, this.WINDOW_SIZE / SCREEN_PIXEL_SIZE + 1);
                     this.screen[0][i][j] = this.screen[1][i][j];
                 }
             }
@@ -358,10 +351,10 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
 
         if(this.game == 0 && !(Main.isInstructions && Main.currentGame == 0)) {
             g2.setColor(Color.BLACK);
-            g2.setFont(new Font("Arial", Font.PLAIN, windowWidth/20));
+            g2.setFont(new Font("Arial", Font.PLAIN, this.WINDOW_SIZE/20));
             for(int i = 0; i < this.buttons.length; i++) {
                 if(this.buttons[i].isAlive()) {
-                    g2.drawString("Price: " + (5 - this.buttons[i].getLives()) + " " + this.buttonNames[i], windowWidth / 10 + (i % 2) * windowWidth / 2 + xOffset, 2 * windowHeight / 3 - (i / 2) * windowHeight / 2 + yOffset);
+                    g2.drawString("Price: " + (5 - this.buttons[i].getLives()) + " " + this.BUTTON_NAMES[i], this.WINDOW_SIZE / 10 + (i % 2) * this.WINDOW_SIZE / 2 + X_OFFSET, 2 * this.WINDOW_SIZE / 3 - (i / 2) * this.WINDOW_SIZE / 2 + Y_OFFSET);
                     switch (this.buttons[i].getLives()) {
                         case 0:
                             this.describeArray = new String[]{""};
@@ -383,17 +376,17 @@ public class Minigame extends JFrame implements ActionListener, MouseListener, M
                             break;
                         case 2:
                             if (i > 0)
-                                this.describeArray = new String[]{"Buy for clicks", "to be able to", "turn the kite " + buttonNames[i - 1]};
+                                this.describeArray = new String[]{"Buy for clicks", "to be able to", "turn the kite " + BUTTON_NAMES[i - 1]};
                             else this.describeArray = new String[]{"Buy for clicks", "to be better"};
                             break;
                         case 3:
-                            this.describeArray = new String[]{"Buy for the lower two", "segments to slowly", "turn " + buttonNames[i]};
+                            this.describeArray = new String[]{"Buy for the lower two", "segments to auto", "turn " + BUTTON_NAMES[i]};
                             break;
                         case 4:
-                            this.describeArray = new String[]{"Buy for the upper two", "segments to slowly", "turn " + buttonNames[i]};
+                            this.describeArray = new String[]{"Buy for the upper two", "segments to auto", "turn " + BUTTON_NAMES[i]};
                     }
                     for (int j = 0; j < this.describeArray.length; j++) {
-                        g2.drawString(this.describeArray[j], (i % 2) * windowWidth / 2 + xOffset, 5 * windowHeight / 6 + (j + 1) * windowHeight / 20 - (i / 2) * windowHeight / 2 + yOffset);
+                        g2.drawString(this.describeArray[j], (i % 2) * this.WINDOW_SIZE / 2 + X_OFFSET, 5 * this.WINDOW_SIZE / 6 + (j + 1) * this.WINDOW_SIZE / 20 - (i / 2) * this.WINDOW_SIZE / 2 + Y_OFFSET);
                     }
                 }
             }
