@@ -32,7 +32,6 @@ public class Main extends JFrame implements MouseMotionListener {
     public static int nextGame; // the type the next game will be - this changes depending on which button you last hovered over
     public static Minigame currentMinigame; // the current minigame object
     private boolean isWin; // whether the player has won the game (this triggers when the player has fully coloured in their kite)
-    public static boolean isMiniWin; // whether the player just won the current minigame
     public static boolean isInstructions; // whether to show the instructions screen
     private String[] instructionsArray; // changes based on the game and contains the instructions, which are printed on the screen
     private boolean isStart; // lets me only call super.paint(g) once, as calling it more caused flickering
@@ -92,7 +91,6 @@ public class Main extends JFrame implements MouseMotionListener {
 
     public void kiteHome() { // shows the home screen and sets up whatever minigames are being played
         currentGame = 4; // this represents the home screen as the main focus when repainting
-        isMiniWin = false;
 
         // makes kites have less health the more xp you have for that minigame and checks if the kite has full xp in all (and shows the win screen if so)
         isWin = true;
@@ -122,13 +120,6 @@ public class Main extends JFrame implements MouseMotionListener {
 
         // after the minigame is done, shuts down the minigame and brings the player back to life, then runs through the selection screen again
         player.resurrect();
-        if(player.getXP(currentGame) == 255) {
-            isMiniWin = true;
-            isInstructions = true;
-            clearScreen();
-            startKite.resurrect();
-            runGame();
-        }
         if(currentGame != 0) currentMinigame.dispose();
         if(!isWin) kiteHome();
     }
@@ -137,44 +128,25 @@ public class Main extends JFrame implements MouseMotionListener {
 
         while(player.isAlive()) { // while the player is alive, keep updating the screen
             try{
-                if(isMiniWin) {
-                    repaint();
-                    if(isCookie && player.getXP(0) == 255) {
-                        cookieMinigame.repaint();
-                    } else currentMinigame.repaint();
-                    if(!startKite.isAlive()) {
-                        player.kill();
-                        if(isCookie && player.getXP(0) == 255) {
-                            cookieMinigame.getPlayer().kill();
-                            cookieMinigame.dispose();
-                            isCookie = false;
-                            isInCookie = false;
-                        }
+                if(isCookie) { // runs the cookie minigame if it's being played (this allows it to be played at the same time as the home screen
+                    cookieMinigame.repaint();
+                    if(!cookieMinigame.getPlayer().isAlive()) { // closes the cookie minigame when the player finishes it
+                        player.changeColor(BUTTON_COLORS[0], 0);
+                        cookieMinigame.dispose();
+                        isCookie = false;
+                        isInCookie = false;
 
                         // checks if this was the last minigame to be won, and if so, triggers the win screen
                         isWin = true;
-                        for (int i = 0; i < buttons.length; i++) if (player.getXP(i) < 255) isWin = false;
-                        if (isWin) kiteHome();
+                        for(int i = 0; i < buttons.length; i++) if(player.getXP(i) < 255) isWin = false;
+                        if(isWin) kiteHome();
                     }
-                } else {
-                    if (isCookie) { // runs the cookie minigame if it's being played (this allows it to be played at the same time as the home screen
-                        cookieMinigame.repaint();
-                        if (!cookieMinigame.getPlayer().isAlive()) { // closes the cookie minigame when the player finishes it
-                            player.changeColor(BUTTON_COLORS[0], 0);
-                            isMiniWin = true;
-                            isInstructions = true;
-                            clearScreen();
-                            startKite.resurrect();
-                            cookieMinigame.getPlayer().resurrect();
-                        }
-                    }
-                    if (currentGame == 1 && !isWait)
-                        currentMinigame.repaint(); // runs the simon minigame if it's time for the player to copy the buttons
-                    else repaint(); // otherwise, just repaint the home screen
-                    if (currentGame == 4) { // runs through all the buttons and checks if they're dead, and if so, kills the player (which makes the home screen stop running)
-                        for (int i = 0; i < buttons.length; i++) {
-                            if (!buttons[i].isAlive() && player.getXP(i) != 255) player.kill();
-                        }
+                }
+                if(currentGame == 1 && !isWait) currentMinigame.repaint(); // runs the simon minigame if it's time for the player to copy the buttons
+                else repaint(); // otherwise, just repaint the home screen
+                if(currentGame == 4) { // runs through all the buttons and checks if they're dead, and if so, kills the player (which makes the home screen stop running)
+                    for(int i = 0; i < buttons.length; i++) {
+                        if(!buttons[i].isAlive() && player.getXP(i) != 255) player.kill();
                     }
                 }
                 Thread.sleep(UPDATE_SPEED); // waits for a bit before updating the screen again
@@ -249,7 +221,7 @@ public class Main extends JFrame implements MouseMotionListener {
                     SCREEN_TYPE[i][j] = "background";
                 }
             }
-            if(currentGame == 4 && !isMiniWin) {
+            if(currentGame == 4) {
                 showButtons();
                 player.show(M_G, mouseX, mouseY);
             }
@@ -292,40 +264,37 @@ public class Main extends JFrame implements MouseMotionListener {
         if(isInstructions) { // prints out the instructions on the screen
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("Arial", Font.PLAIN, WINDOW_SIZE/20));
-            if(isMiniWin) instructionsArray = new String[] {"Congratulations!", "You have won this minigame!", "", "Hover over the other kite to go home"};
-            else {
-                switch (currentGame) { // changes the instructions based on what game is next
-                    case 0:
-                        instructionsArray = new String[]{"Welcome to Kite Clicker!", "Click lots to gain more colour", "When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite", "You will progress through the colours", "The aim is to have a fully yellow kite", "YOU CAN PLAY OTHER GAMES STILL"};
-                        break;
-                    case 1:
-                        instructionsArray = new String[]{"Welcome to Kite Says!", "Watch the buttons light up", "on the main screen", "Afterwards, hover over them on the", "small screen in the same order"};
-                        break;
-                    case 2:
-                        instructionsArray = new String[]{"Welcome to Kite the Needle!", "Thread the needle by avoiding", "the obstacles for as long as you can", "The gaps will get smaller and smaller"};
-                        break;
-                    case 3:
-                        instructionsArray = new String[]{"Welcome to Kite Flying 101!", "Dodge the clouds and try to stay alive", "The clouds will get faster and faster"};
-                        break;
-                    case 4:
-                        if (isWin) instructionsArray = new String[]{"Congratulations!", "You have won the game!"};
-                        else
-                            instructionsArray = new String[]{"Welcome to Kite Life!", "Hover over the kites to start each", "minigame (they will disappear ", "as you gain xp)", "", "The aim is to have a fully coloured kite"};
-                        for (int i = 0; i < instructionsArray.length; i++) {
-                            g2.drawString(instructionsArray[i], WINDOW_SIZE / 20 + X_OFFSET, (2 * i + 7) * WINDOW_SIZE / 20 + Y_OFFSET);
-                        }
-                        if (isCookie)
-                            g2.drawString("Tip: you can play multiple games at once!", WINDOW_SIZE / 20 + X_OFFSET, (instructionsArray.length * 2 + 7) * WINDOW_SIZE / 20 + Y_OFFSET);
-                        else if (player.getXP(0) == 0)
-                            g2.drawString("Tip: start with yellow!", WINDOW_SIZE / 20 + X_OFFSET, (instructionsArray.length * 2 + 7) * WINDOW_SIZE / 20 + Y_OFFSET);
-                        instructionsArray = new String[]{""};
-                }
+            switch(currentGame) { // changes the instructions based on what game is next
+                case 0:
+                    instructionsArray = new String[]{"Welcome to Kite Clicker!", "Click lots to gain more colour", "When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite", "You will progress through the colours", "The aim is to have a fully yellow kite", "YOU CAN PLAY OTHER GAMES STILL"};
+                    break;
+                case 1:
+                    instructionsArray = new String[]{"Welcome to Kite Says!", "Watch the buttons light up", "on the main screen", "Afterwards, hover over them on the", "small screen in the same order"};
+                    break;
+                case 2:
+                    instructionsArray = new String[]{"Welcome to Kite the Needle!", "Thread the needle by avoiding", "the obstacles for as long as you can", "The gaps will get smaller and smaller"};
+                    break;
+                case 3:
+                    instructionsArray = new String[]{"Welcome to Kite Flying 101!", "Dodge the clouds and try to stay alive", "The clouds will get faster and faster"};
+                    break;
+                case 4:
+                    if (isWin) instructionsArray = new String[]{"Congratulations!", "You have won the game!"};
+                    else
+                        instructionsArray = new String[]{"Welcome to Kite Life!", "Hover over the kites to start each", "minigame (they will disappear ", "as you gain xp)", "", "The aim is to have a fully coloured kite"};
+                    for (int i = 0; i < instructionsArray.length; i++) {
+                        g2.drawString(instructionsArray[i], WINDOW_SIZE / 20 + X_OFFSET, (2 * i + 7) * WINDOW_SIZE / 20 + Y_OFFSET);
+                    }
+                    if (isCookie)
+                        g2.drawString("Tip: you can play multiple games at once!", WINDOW_SIZE / 20 + X_OFFSET, (instructionsArray.length * 2 + 7) * WINDOW_SIZE / 20 + Y_OFFSET);
+                    else if (player.getXP(0) == 0)
+                        g2.drawString("Tip: start with yellow!", WINDOW_SIZE / 20 + X_OFFSET, (instructionsArray.length * 2 + 7) * WINDOW_SIZE / 20 + Y_OFFSET);
+                    instructionsArray = new String[]{""};
             }
 
             for(int i = 0; i < instructionsArray.length; i++) { // actually prints instructions
                 g2.drawString(instructionsArray[i], WINDOW_SIZE/10+X_OFFSET, (i+1)*WINDOW_SIZE/10+Y_OFFSET);
             }
-            if(currentGame != 4 && !isMiniWin) g2.drawString("Hover over the other kite to start", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 2) * WINDOW_SIZE / 10 + Y_OFFSET); // this instruction is in all games except the home screen
+            if(currentGame != 4) g2.drawString("Hover over the other kite to start", WINDOW_SIZE / 10 + X_OFFSET, (instructionsArray.length + 2) * WINDOW_SIZE / 10 + Y_OFFSET); // this instruction is in all games except the home screen
         }
     }
 }

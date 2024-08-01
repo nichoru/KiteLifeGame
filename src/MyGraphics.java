@@ -14,7 +14,7 @@ public class MyGraphics {
                 if(Main.currentScreenType[x][y].equals("obstacle")) { // if it's with an obstacle, return that there was a collision
                     Main.currentScreenType[x][y] = type;
                     return true;
-                } else if(Main.isInCookie && (Main.isMiniWin && Main.player.getXP(0) == 255)) { // if in the cookie minigame
+                } else if(Main.isInCookie) { // if in the cookie minigame
                     if(Main.isInstructions && Main.currentGame == 0) { // instructions menu - if the player hits the start kite (and it's not immune), the start kite loses a life
                         if(!Main.startKite.isImmune()) Main.startKite.loseLife();
                         Main.currentScreenType[x][y] = type;
@@ -31,7 +31,7 @@ public class MyGraphics {
                     return false;
                 } else if(Main.isInstructions) { // if in an instruction screen, makes the start kite/touched game button lose a life
                     if(!Main.startKite.isImmune()) Main.startKite.loseLife();
-                    if(Main.currentGame == 4 && !Main.isMiniWin) if(!Main.buttons[Integer.parseInt(Main.currentScreenType[x][y])].isImmune()) {
+                    if(Main.currentGame == 4) if(!Main.buttons[Integer.parseInt(Main.currentScreenType[x][y])].isImmune()) {
                         Main.buttons[Integer.parseInt(Main.currentScreenType[x][y])].loseLife();
                         Main.nextGame = Integer.parseInt(Main.currentScreenType[x][y]);
                     }
