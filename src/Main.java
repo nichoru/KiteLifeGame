@@ -32,7 +32,7 @@ public class Main extends JFrame implements MouseMotionListener {
     public static int nextGame; // the type the next game will be - this changes depending on which button you last hovered over
     public static Minigame currentMinigame; // the current minigame object
     private boolean isWin; // whether the player has won the game (this triggers when the player has fully coloured in their kite)
-    private boolean isMiniWin; // whether the player just won the current minigame
+    public static boolean isMiniWin; // whether the player just won the current minigame
     public static boolean isInstructions; // whether to show the instructions screen
     private String[] instructionsArray; // changes based on the game and contains the instructions, which are printed on the screen
     private boolean isStart; // lets me only call super.paint(g) once, as calling it more caused flickering
@@ -139,21 +139,33 @@ public class Main extends JFrame implements MouseMotionListener {
             try{
                 if(isMiniWin) {
                     repaint();
-                    if(currentGame != 0) currentMinigame.repaint();
-                    if(!startKite.isAlive()) player.kill();
+                    if(isCookie && player.getXP(0) == 255) {
+                        cookieMinigame.repaint();
+                    } else currentMinigame.repaint();
+                    if(!startKite.isAlive()) {
+                        player.kill();
+                        if(isCookie && player.getXP(0) == 255) {
+                            cookieMinigame.getPlayer().kill();
+                            cookieMinigame.dispose();
+                            isCookie = false;
+                            isInCookie = false;
+                        }
+
+                        // checks if this was the last minigame to be won, and if so, triggers the win screen
+                        isWin = true;
+                        for (int i = 0; i < buttons.length; i++) if (player.getXP(i) < 255) isWin = false;
+                        if (isWin) kiteHome();
+                    }
                 } else {
                     if (isCookie) { // runs the cookie minigame if it's being played (this allows it to be played at the same time as the home screen
                         cookieMinigame.repaint();
                         if (!cookieMinigame.getPlayer().isAlive()) { // closes the cookie minigame when the player finishes it
                             player.changeColor(BUTTON_COLORS[0], 0);
-                            cookieMinigame.dispose();
-                            isCookie = false;
-                            isInCookie = false;
-
-                            // checks if this was the last minigame to be won, and if so, triggers the win screen
-                            isWin = true;
-                            for (int i = 0; i < buttons.length; i++) if (player.getXP(i) < 255) isWin = false;
-                            if (isWin) kiteHome();
+                            isMiniWin = true;
+                            isInstructions = true;
+                            clearScreen();
+                            startKite.resurrect();
+                            cookieMinigame.getPlayer().resurrect();
                         }
                     }
                     if (currentGame == 1 && !isWait)
@@ -237,7 +249,7 @@ public class Main extends JFrame implements MouseMotionListener {
                     SCREEN_TYPE[i][j] = "background";
                 }
             }
-            if(currentGame == 4) {
+            if(currentGame == 4 && !isMiniWin) {
                 showButtons();
                 player.show(M_G, mouseX, mouseY);
             }
