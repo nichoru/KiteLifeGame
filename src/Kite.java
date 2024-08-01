@@ -41,10 +41,10 @@ public class Kite {
         if(this.y > this.SCREEN_SIZE - this.HEIGHT) this.y = this.SCREEN_SIZE - this.HEIGHT;
 
         // draws the immunity circle around the kite (if applicable)
-        if(this.immunity > 0 && !this.TYPE.equals("player")) {
-            if(Main.isInstructions && (!Main.isInCookie || Main.currentGame == 0)) g.makeColoredCircle(this.x, this.y, this.HEIGHT*3/2, new Color(((this.FILL_COLOR[0].getRed())*(255*this.immunity/this.MAX_IMMUNITY))/255, ((this.FILL_COLOR[0].getGreen())*(255*this.immunity/this.MAX_IMMUNITY))/255, ((this.FILL_COLOR[0].getBlue())*(255*this.immunity/this.MAX_IMMUNITY))/255), "background");
+        if(this.immunity > 0 && !this.TYPE.equals("player") && this.lives < 4 && !(this.MAX_IMMUNITY == Main.IMMUNE_TIME && Main.currentGame == 4 && this.lives == 0)) {
+            if(this.TYPE.equals("start") || (this.MAX_IMMUNITY == Main.IMMUNE_TIME && Main.currentGame != 1)) g.makeColoredCircle(this.x, this.y, this.HEIGHT*3/2, new Color(((this.FILL_COLOR[0].getRed())*(255*this.immunity/this.MAX_IMMUNITY))/255, ((this.FILL_COLOR[0].getGreen())*(255*this.immunity/this.MAX_IMMUNITY))/255, ((this.FILL_COLOR[0].getBlue())*(255*this.immunity/this.MAX_IMMUNITY))/255), "background");
             else g.makeColoredCircle(this.x, this.y, this.HEIGHT*3/2, new Color(255-((255-this.FILL_COLOR[0].getRed())*(255*this.immunity/this.MAX_IMMUNITY))/255, 255-((255-this.FILL_COLOR[0].getGreen())*(255*this.immunity/this.MAX_IMMUNITY))/255, 255-((255-this.FILL_COLOR[0].getBlue())*(255*this.immunity/this.MAX_IMMUNITY))/255), "background");
-        } else if(this.immunity > 0 && !Main.isInstructions && Main.currentGame == 1 && this.lives < 4) g.makeColoredCircle(this.x, this.y, this.HEIGHT*3/2, new Color(255-((255-Main.BUTTON_COLORS[this.lives].getRed())*(255*this.immunity/this.MAX_IMMUNITY))/255, 255-((255-Main.BUTTON_COLORS[this.lives].getGreen())*(255*this.immunity/this.MAX_IMMUNITY))/255, 255-((255-Main.BUTTON_COLORS[this.lives].getBlue())*(255*this.immunity/this.MAX_IMMUNITY))/255), "background");
+        } else if(this.immunity > 0 && !Main.isInstructions && Main.currentGame == 1 && this.lives < 4) g.makeColoredCircle(this.x, this.y, this.HEIGHT*3/2, new Color(255-255*this.immunity/this.MAX_IMMUNITY, 255-255*this.immunity/this.MAX_IMMUNITY, 255-255*this.immunity/this.MAX_IMMUNITY), "background");
 
         // draws the kite based on how many lives are left, and if it's drawn on top of an obstacle, collision is set to true
         if(this.lives == 4) if(g.makeRATriangle(this.x, this.y, this.WIDTH, this.HEIGHT, 1, -1, this.FILL_COLOR[3], this.OUTLINE_COLOR, this.TYPE)) collision = true;
