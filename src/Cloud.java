@@ -1,42 +1,36 @@
 import java.awt.*; // lets me use colours
 
 public class Cloud {
-    private int x;
-    private float y;
-    private int screenSize;
-    private int scale;
-    private int gray1;
-    private int gray2;
-    private int gray3;
-    private int gray4;
-    private float speed;
+    private int x; // x position of the cloud
+    private float y; // y position of the cloud
+    private final int SCREEN_SIZE; // the size of the screen it's on, so it knows when to regenerate and sizing
+    private final int SCALE; // helps with the size of the cloud
+    private final int[] GRAY = new int[4]; // the colour of each part of the cloud (these are each repeated three times to make the right shade of grey)
+    private float speed; // the (increasing) speed at which the cloud moves
 
-    public Cloud(int screenSize) {
-        this.screenSize = screenSize;
-        this.scale = this.screenSize*9/5;
+    public Cloud(int screenSize) { // constructor for Cloud
+        this.SCREEN_SIZE = screenSize;
+        this.SCALE = this.SCREEN_SIZE*9/5;
         this.speed = 0.85F;
         this.regenerate();
     }
 
-    public void move() {
+    public void move() { // moves the cloud downwards at the set speed (while increasing it), and if it goes off-screen, regenerates it
         this.y+=this.speed;
         this.speed+= 0.001F;
-        if(this.y > this.screenSize + 5*scale/144) this.regenerate();
+        if(this.y > this.SCREEN_SIZE + 5*this.SCALE/144) this.regenerate();
     }
 
-    public void show(MyGraphics g) {
-        g.makeColoredCircle(this.x - 11*scale/288, (int) this.y + scale/144, scale/36, new Color(gray1, gray1, gray1), "obstacle");
-        g.makeColoredCircle(this.x + 5*scale/144, (int) this.y + 3*scale/288, 7*scale/288, new Color(gray2, gray2, gray2), "obstacle");
-        g.makeColoredCircle(this.x, (int) this.y, 5*scale/144, new Color(gray3, gray3, gray3), "obstacle");
-        g.makeColoredCircle(this.x - 7*scale/96, (int) this.y + 5*scale/288, scale/63, new Color(gray4, gray4, gray4), "obstacle");
+    public void show(MyGraphics mg) { // draws the cloud on the current pixelated screen
+        mg.makeColoredCircle(this.x - 11*this.SCALE/288, (int) this.y + this.SCALE/144, this.SCALE/36, new Color(this.GRAY[0], this.GRAY[0], this.GRAY[0]), "obstacle");
+        mg.makeColoredCircle(this.x + 5*this.SCALE/144, (int) this.y + 3*this.SCALE/288, 7*this.SCALE/288, new Color(this.GRAY[1], this.GRAY[1], this.GRAY[1]), "obstacle");
+        mg.makeColoredCircle(this.x, (int) this.y, 5*this.SCALE/144, new Color(this.GRAY[2], this.GRAY[2], this.GRAY[2]), "obstacle");
+        mg.makeColoredCircle(this.x - 7*this.SCALE/96, (int) this.y + 5*this.SCALE/288, this.SCALE/63, new Color(this.GRAY[3], this.GRAY[3], this.GRAY[3]), "obstacle");
     }
 
-    public void regenerate() {
-        this.x = (int) (Math.random()*screenSize);
-        this.y = (int) (-Math.random()*screenSize-5*scale/144);
-        this.gray1 = (int) (Math.random()*75 + 125);
-        this.gray2 = (int) (Math.random()*75 + 125);
-        this.gray3 = (int) (Math.random()*75 + 125);
-        this.gray4 = (int) (Math.random()*75 + 125);
+    public void regenerate() { // regenerates the cloud with a new shade of grey, and gives it a random delay until it appears on screen (by changing starting position)
+        this.x = (int) (Math.random()*this.SCREEN_SIZE);
+        this.y = (int) (-Math.random()*this.SCREEN_SIZE - 5*this.SCALE/144);
+        for(int i = 0; i < this.GRAY.length; i++) this.GRAY[i] = (int) (Math.random()*75 + 125);
     }
 }
