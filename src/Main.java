@@ -8,8 +8,8 @@ public class Main extends JFrame implements MouseMotionListener {
     private final int WINDOW_SIZE; // the length of the window's sides (it's a square)
 
     // accounts for how the canvas is automatically drawn at slightly different coordinates to the window
-    public final static int X_OFFSET = 8;
-    private final int Y_OFFSET = 31;
+    public static final int X_OFFSET = 8;
+    public static final int Y_OFFSET = 31;
 
     private final int SCREEN_PIXEL_SIZE = 150; // the length of the sides of the pixelated screen
     private final Color[][][] SCREEN; // the pixelated screen array - this holds both the previous screen (so it can check for changes) and the current screen, as well as the x and y of a colour
@@ -213,7 +213,7 @@ public class Main extends JFrame implements MouseMotionListener {
 
         Graphics2D g2 = (Graphics2D) g; // lets me actually draw on the canvas
 
-        if(isInstructions) { // makes the background black and displays the selection buttons if on the home screen
+        if(isInstructions) { // makes the background black (and displays the selection buttons if on the home screen)
             clearScreen();
             for (int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
                 for (int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
