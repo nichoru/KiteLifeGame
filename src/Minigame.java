@@ -150,7 +150,12 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
     }
 
     public void mouseExited(MouseEvent e) {
-        if(this.GAME == 0) Main.isInCookie = false; // if the mouse leaves the cookie minigame, it stops registering the mouse as on that screen
+        if(this.GAME == 0 || this.GAME == 1) {
+            if(this.GAME == 0) Main.isInCookie = false; // if the mouse leaves the cookie minigame, it stops registering the mouse as on that screen
+            // moving the kite to the middle to avoid weird stuff when leaving the screen for button-based minigames
+            this.mouseX = this.SCREEN_PIXEL_SIZE/2;
+            this.mouseY = this.SCREEN_PIXEL_SIZE/2;
+        }
     }
     public void mouseEntered(MouseEvent e) {
         if(this.GAME == 0) Main.isInCookie = true; // if the mouse enters the cookie minigame, it registers the mouse as on that screen
@@ -185,9 +190,6 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
         for(int i = 0; i < this.BUTTONS.length; i++) {
             this.BUTTONS[i].show(this.M_G, this.SCREEN_PIXEL_SIZE/4+(i%2)*this.SCREEN_PIXEL_SIZE/2, this.SCREEN_PIXEL_SIZE/4+((3-i)/2)*this.SCREEN_PIXEL_SIZE/2);
         }
-    }
-    public void setScreenType(int x, int y, String type) { // sets screen type at a coordinate
-        this.SCREEN_TYPE[x][y] = type;
     }
 
     public void cookiePay(int price, int segment, int level) { // buys an upgrade in the cookie minigame and updates abilities and appearance based on that
@@ -246,9 +248,6 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
     }
     public Kite getButton(int i) { // returns a button
         return this.BUTTONS[i];
-    }
-    public String getScreenType(int x, int y) { // returns the screen type at a coordinate
-        return this.SCREEN_TYPE[x][y];
     }
 
     @Override
