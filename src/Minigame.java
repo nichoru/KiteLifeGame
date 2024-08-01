@@ -32,6 +32,7 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
     private int cookieMaxTop; // the maximum colour that the top segments can automatically get to
     private int cookieMaxBottom; // the maximum colour that the bottom segments can automatically get to
     private String[] describeArray; // the array that holds and prints the descriptions of the buttons
+    private boolean cookieWin; // if this is the cookie minigame and you win, this lets it give you the minigame win screen
 
     // the two needles for the needle minigame
     private final Needle X_NEEDLE;
@@ -90,6 +91,7 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
         this.isStart = true;
         this.X_NEEDLE = new Needle(SCREEN_PIXEL_SIZE, PLAYER.getHeight(), true);
         this.Y_NEEDLE = new Needle(SCREEN_PIXEL_SIZE, PLAYER.getWidth(), false);
+        this.cookieWin = false;
 
         // runs the minigame in instuction mode
         this.runGame(0F, Main.startKite);
@@ -112,8 +114,8 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
 
     public void kiteCookie() { // sets up the cookie minigame (this isn't run by itself)
         this.cookieClick = 3;
-        this.cookieClickPower = 5;
-        this.cookieMaxClick = 3;
+        this.cookieClickPower = 50;
+        this.cookieMaxClick = 0;
         this.cookieMaxTop = 4;
         this.cookieMaxBottom = 4;
         this.cookieSegment = this.BUTTONS.length-1;
@@ -169,7 +171,7 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
         this.mouseY = (e.getY() - Main.Y_OFFSET)*this.SCREEN_PIXEL_SIZE/this.WINDOW_SIZE;
     }
     public void mouseClicked(MouseEvent e) { // updates the player's XP when the mouse is clicked in cookie
-        if(this.GAME == 0 && !(Main.isInstructions && Main.currentGame == 0)) {
+        if(this.GAME == 0 && !(Main.isInstructions && Main.currentGame == 0) && !this.cookieWin) {
             this.PLAYER.gainXP(this.cookieClickPower, this.cookieSegment, 255*(4-this.cookieClick));
             this.cookieChangeColor();
         }
@@ -263,7 +265,7 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
 
         Graphics2D g2 = (Graphics2D) g; // lets me actually draw on the canvas
 
-        if(Main.isInstructions && Main.currentGame == this.GAME) { // makes the background black and displays the start kite when getting instructions for this game
+        if(Main.isInstructions && (Main.currentGame == this.GAME || this.cookieWin)) { // makes the background black and displays the start kite when getting instructions for this game
             this.clearScreen();
             for(int i = 0; i < this.SCREEN_PIXEL_SIZE; i++) {
                 for(int j = 0; j < this.SCREEN_PIXEL_SIZE; j++) {
@@ -298,12 +300,13 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
                         this.cookieChangeColor();
                     }
 
-                    if(this.cookieClick == 0 && this.cookieSegment == 0 && this.PLAYER.getXP(this.cookieSegment) == 255 * this.BUTTONS.length) { // if the kite is fully yellow, kill it and gain xp in the main game
+                    if(this.cookieClick == 0 && this.cookieSegment == 0 && this.PLAYER.getXP(this.cookieSegment) == 255 * this.BUTTONS.length) { // if the kite is fully yellow, gain xp in the main game
                         Main.player.gainXP(255, this.GAME, 255);
+                        this.cookieWin = true;
                         this.PLAYER.kill();
+                    } else {
+                        this.showButtons();
                     }
-
-                    this.showButtons();
                     break;
                 case 1: // simon minigame
                     if (!Main.isWait) { // if the player isn't waiting for the main screen to show the colours, let the player move and play the game
@@ -353,7 +356,7 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
             }
         }
 
-        if(this.GAME == 0 && !(Main.isInstructions && Main.currentGame == 0)) { // displays the prices on the screen in the cookie minigame after the instructions are done
+        if(this.GAME == 0 && !(Main.isInstructions && Main.currentGame == 0) && !cookieWin) { // displays the prices on the screen in the cookie minigame after the instructions are done
             g2.setColor(Color.BLACK);
             g2.setFont(new Font("Arial", Font.PLAIN, this.WINDOW_SIZE/20));
             for(int i = 0; i < this.BUTTONS.length; i++) {
