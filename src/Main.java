@@ -12,9 +12,9 @@ public class Main extends JFrame implements MouseMotionListener {
     private final int Y_OFFSET = 31;
 
     private final int SCREEN_PIXEL_SIZE = 150; // the length of the sides of the pixelated screen
-    public static Color[][][] screen; // the pixelated screen array - this holds both the previous screen (so it can check for changes) and the current screen, as well as the x and y of a colour
+    private final Color[][][] SCREEN; // the pixelated screen array - this holds both the previous screen (so it can check for changes) and the current screen, as well as the x and y of a colour
     public static Color[][][] currentScreen; // this lets MyGraphics know which screen to draw on
-    public static String[][] screenType; // tells me the type of each pixel in the screen array - this is used for collision detection in
+    private final String[][] SCREEN_TYPE; // tells me the type of each pixel in the screen array - this is used for collision detection in
     public static String[][] currentScreenType; // this lets MyGraphics know which screen to draw collision on
 
     private int mouseX; // the x coordinate of the mouse within the pixelated screen array
@@ -25,7 +25,7 @@ public class Main extends JFrame implements MouseMotionListener {
     public static Kite player; // the player's kite that moves with their mouse
     public static Kite startKite; // the kite that you kill to start the minigames during the instructions screen
     public static Kite[] buttons = new Kite[4]; // the coloured kites in the home screen and simon screen
-    private final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED}; // the colours of the button kites
+    public static final Color[] BUTTON_COLORS = {Color.YELLOW, Color.MAGENTA, Color.CYAN, Color.RED}; // the colours of the button kites
     public static final int IMMUNE_TIME = 50; // the time in frames that kites are immune for after losing a life
 
     public static int currentGame; // the type the current game is - 0 represents Kite Clicker (aka cookie), 1 represents Kite Says (aka simon), 2 represents Kite the Needle (aka needle), 3 represents Kite Flying 101 (aka classic), 4 represents the home screen
@@ -76,8 +76,8 @@ public class Main extends JFrame implements MouseMotionListener {
         this.setVisible(true);
 
         // setting up a few variables
-        screen = new Color[2][SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
-        screenType = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
+        SCREEN = new Color[2][SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
+        SCREEN_TYPE = new String[SCREEN_PIXEL_SIZE][SCREEN_PIXEL_SIZE];
         isCookie = false;
         isInCookie = false;
         isStart = true;
@@ -187,7 +187,7 @@ public class Main extends JFrame implements MouseMotionListener {
     public void clearScreen() { // clears the screen array so the next time it's drawn, everything is printed
         for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
             for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
-                screen[0][i][j] = null;
+                SCREEN[0][i][j] = null;
             }
         }
     }
@@ -203,8 +203,8 @@ public class Main extends JFrame implements MouseMotionListener {
     @Override
     public void paint(Graphics g) { // prints out the game on the screen
         // lets M_G know which screen to draw and do collision on
-        currentScreen = screen;
-        currentScreenType = screenType;
+        currentScreen = SCREEN;
+        currentScreenType = SCREEN_TYPE;
 
         if(isStart) { // initialises some things, but I don't want this running more than once
             super.paint(g);
@@ -217,8 +217,8 @@ public class Main extends JFrame implements MouseMotionListener {
             clearScreen();
             for (int i = 0; i < SCREEN_PIXEL_SIZE; i++) {
                 for (int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
-                    screen[1][i][j] = Color.BLACK;
-                    screenType[i][j] = "background";
+                    SCREEN[1][i][j] = Color.BLACK;
+                    SCREEN_TYPE[i][j] = "background";
                 }
             }
             if(currentGame == 4) {
@@ -229,8 +229,8 @@ public class Main extends JFrame implements MouseMotionListener {
         } else { // otherwise, show the stuff for the simon minigame
             for (int i = 0; i < SCREEN_PIXEL_SIZE; i++) { // makes the background white
                 for (int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
-                    screen[1][i][j] = Color.WHITE;
-                    screenType[i][j] = "background";
+                    SCREEN[1][i][j] = Color.WHITE;
+                    SCREEN_TYPE[i][j] = "background";
                 }
             }
 
@@ -253,10 +253,10 @@ public class Main extends JFrame implements MouseMotionListener {
 
         for(int i = 0; i < SCREEN_PIXEL_SIZE; i++) { // prints out the screen array
             for(int j = 0; j < SCREEN_PIXEL_SIZE; j++) {
-                if(screen[0][i][j] != screen[1][i][j]) {
-                    g2.setColor(screen[1][i][j]);
+                if(SCREEN[0][i][j] != SCREEN[1][i][j]) {
+                    g2.setColor(SCREEN[1][i][j]);
                     g2.fillRect(i * WINDOW_SIZE / SCREEN_PIXEL_SIZE + X_OFFSET, j * WINDOW_SIZE / SCREEN_PIXEL_SIZE + Y_OFFSET, WINDOW_SIZE / SCREEN_PIXEL_SIZE + 1, WINDOW_SIZE / SCREEN_PIXEL_SIZE + 1);
-                    screen[0][i][j] = screen[1][i][j];
+                    SCREEN[0][i][j] = SCREEN[1][i][j];
                 }
             }
         }

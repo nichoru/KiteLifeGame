@@ -31,9 +31,9 @@ public class MyGraphics {
                     return false;
                 } else if(Main.isInstructions) {
                     if(!Main.startKite.isImmune()) Main.startKite.loseLife();
-                    if(Main.currentGame == 4) if(!Main.buttons[Integer.parseInt(Main.screenType[x][y])].isImmune()) {
-                        Main.buttons[Integer.parseInt(Main.screenType[x][y])].loseLife();
-                        Main.nextGame = Integer.parseInt(Main.screenType[x][y]);
+                    if(Main.currentGame == 4) if(!Main.buttons[Integer.parseInt(Main.currentScreenType[x][y])].isImmune()) {
+                        Main.buttons[Integer.parseInt(Main.currentScreenType[x][y])].loseLife();
+                        Main.nextGame = Integer.parseInt(Main.currentScreenType[x][y]);
                     }
                     Main.currentScreenType[x][y] = type;
                     return false;
