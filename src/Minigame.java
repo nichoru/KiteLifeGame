@@ -170,6 +170,7 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
         this.game = 1;
         for(int i = 0; i < buttons.length; i++) buttons[i] = new Kite(SCREEN_PIXEL_SIZE, BUTTON_COLORS[i], 0, i+"", IMMUNE_TIME*2);
         clearScreen();
+        repaint();
     }
 
     public Kite getPlayer() {
@@ -310,13 +311,13 @@ public class Minigame extends JFrame implements MouseListener, MouseMotionListen
                                 }
                                 Main.isWait = true;
                             }
-                            showButtons();
                         } else {
                             Main.isWait = true;
                             Main.player.gainXP(Main.simonCounter * 2, this.game, 255);
                             Main.player.kill();
                         }
                     }
+                    showButtons();
                     break;
                 case 2:
                     xNeedle.move(player.getHeight());

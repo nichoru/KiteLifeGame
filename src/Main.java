@@ -266,7 +266,7 @@ public class Main extends JFrame implements MouseMotionListener {
             g2.setFont(new Font("Arial", Font.PLAIN, WINDOW_SIZE/20));
             switch(currentGame) { // changes the instructions based on what game is next
                 case 0:
-                    instructionsArray = new String[]{"Welcome to Kite Clicker!", "Click lots to gain more colour", "When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite", "The aim is to have a fully yellow kite", "YOU CAN PLAY OTHER GAMES STILL"};
+                    instructionsArray = new String[]{"Welcome to Kite Clicker!", "Click lots to gain more colour", "When you have enough full segments of", "a colour, you can buy upgrades by", "hovering over that colour kite", "You will progress through the colours", "The aim is to have a fully yellow kite", "YOU CAN PLAY OTHER GAMES STILL"};
                     break;
                 case 1:
                     instructionsArray = new String[]{"Welcome to Kite Says!", "Watch the buttons light up", "on the main screen", "Afterwards, hover over them on the", "small screen in the same order"};
